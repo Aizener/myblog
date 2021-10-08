@@ -6,8 +6,13 @@ import logger from 'morgan';
 
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
+import swaggerUi from 'swagger-ui-express';
+
+import './dao/db';
 
 const app = express();
+
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(require('../swagger.json')));
 
 app.use(logger('dev'));
 app.use(express.json());

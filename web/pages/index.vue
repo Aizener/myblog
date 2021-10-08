@@ -69,6 +69,10 @@ type ArticleType = {
 }
 
 export default Vue.extend({
+  transition: {
+    name: 'page',
+    mode: 'out-in'
+  },
   data() {
     return {
       list: ['Vue', 'uni-app', 'ES6', 'CSS3'],
@@ -228,5 +232,12 @@ export default Vue.extend({
       }
     }
   }
+}
+
+.page-enter, .page-leave-to {
+  opacity: 0;
+}
+.page-enter-active, .page-leave-active {
+  transition: opacity .5s;
 }
 </style>
