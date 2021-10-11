@@ -17,10 +17,24 @@ class Article {
   
   @Column({
     type: 'varchar',
-    length: 100,
+    length: 200,
     comment: '描述'
   })
   desc: string = '';
+
+  @Column({
+    type: 'varchar',
+    length: 50,
+    comment: '封面图'
+  })
+  cover: string = '';
+
+  @Column({
+    type: 'varchar',
+    length: 100,
+    comment: '内容'
+  })
+  text: string = '';
 
   @Column({
     type: 'int',
@@ -42,17 +56,17 @@ class Article {
 
   @Column({
     type: 'varchar',
-    length: 13,
+    length: 20,
     comment: '创建时间'
   })
-  createTime: string = ''
+  createTime: number = 0
 
   @Column({
     type: 'varchar',
-    length: 13,
+    length: 20,
     comment: '修改时间'
   })
-  updateTime: string = ''
+  updateTime: number = 0
 
   @ManyToOne(() => User, user => user.articles)
   @Column({

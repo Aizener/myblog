@@ -20,14 +20,32 @@ class User {
 
   @Column({
     type: 'varchar',
-    length: 20
+    length: 20,
+    nullable: true,
+    comment: '手机号'
   })
   phone: string = '';
 
   @Column({
-    type: 'int'
+    type: 'int',
+    comment: '账号状态：1正常'
   })
   active: number = 1;
+
+  @Column({
+    type: 'varchar',
+    length: 50,
+    nullable: true,
+    comment: '头像'
+  })
+  avatar: string = ''
+
+  @Column({
+    type: 'varchar',
+    length: 20,
+    comment: '创建时间'
+  })
+  createTime: number = 0
 
   @OneToMany(() => Article, article => article.user)
   articles!: Article[];

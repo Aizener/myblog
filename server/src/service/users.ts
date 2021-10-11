@@ -2,14 +2,20 @@ import userDAO from '../dao/users'
 import User from '../model/user'
 
 const userService = {
-  findUserById: (id: number) => {
+  findUserById: async (id: number) => {
     return userDAO.findUserById(id);
   },
-  addUser: (user: User) => {
-    return  userDAO.addUser(user);
+  find: async () => {
+    return userDAO.find();
   },
-  updateUser: () => {
-    // userModel.updateUser()
+  addUser: async (user: User) => {
+    return userDAO.addUser(user);
+  },
+  updateUser: async (user: User) => {
+    return userDAO.updateUser(user);
+  },
+  removeUser: async (id: number) => {
+    return userDAO.removeUser(id);
   }
 }
 
