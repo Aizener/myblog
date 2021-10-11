@@ -4,7 +4,11 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "nodemon --watch src/**/*.ts --exec \"ts-node\" ./bin/index.ts"
+    "dev": "nodemon --watch src/**/*.ts --exec \"ts-node\" ./bin/index.ts",
+    "typeorm": "ts-node --transpile-only ./node_modules/typeorm/cli.js",
+    "typeorm:create": "ts-node --transpile-only ./node_modules/typeorm/cli.js --config src/config/db.config.ts migration:create -n",
+    "typeorm:gen": "ts-node --transpile-only ./node_modules/typeorm/cli.js --config src/config/db.config.ts migration:generate -n",
+    "typeorm:run": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:run --config src/config/db.config.ts"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
