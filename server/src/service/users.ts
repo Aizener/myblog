@@ -1,5 +1,7 @@
+import { DeleteResult } from 'typeorm';
 import userDAO from '../dao/users'
 import User from '../model/user'
+import { getCurrentDateTime } from '../utils';
 
 const userService = {
   findUserById: async (id: number) => {
@@ -9,13 +11,15 @@ const userService = {
     return userDAO.find();
   },
   addUser: async (user: User) => {
-    return userDAO.addUser(user);
+    user.createTime = getCurrentDateTime();
+    return userDAO.saveUser(user);
   },
   updateUser: async (user: User) => {
-    return userDAO.updateUser(user);
+    return userDAO.saveUser(user);
   },
   removeUser: async (id: number) => {
-    return userDAO.removeUser(id);
+    const res: DeleteResult = await userDAO.removeUser(id);
+    return res.affected;
   }
 }
 

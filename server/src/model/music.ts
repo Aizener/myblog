@@ -1,31 +1,32 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity({
-  name: 'diary'
+  name: 'music'
 })
-class Diary {
+class Music {
   @PrimaryGeneratedColumn()
   id: number = 0;
 
   @Column({
     type: 'varchar',
-    length: 200,
-    comment: '描述'
+    length: 50,
+    comment: '歌名'
   })
-  desc: string = ''
+  title: string = ''
 
   @Column({
     type: 'varchar',
-    length: 50,
-    comment: '封面图'
+    length: 20,
+    comment: '作者'
   })
-  cover: string = ''
+  author: string = ''
 
   @Column({
-    type: 'text',
-    comment: '内容'
+    type: 'varchar',
+    length: 100,
+    comment: '链接'
   })
-  content: string = ''
+  url: string = ''
 
   @Column({
     type: 'varchar',
@@ -35,4 +36,4 @@ class Diary {
   createTime: string = '';
 }
 
-export default Diary;
+export default Music;

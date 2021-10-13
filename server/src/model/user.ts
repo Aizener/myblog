@@ -8,13 +8,15 @@ class User {
 
   @Column({
     type: 'varchar',
-    length: 20
+    length: 20,
+    comment: '邮箱'
   })
   email: string = '';
 
   @Column({
     type: 'varchar',
-    length: 20
+    length: 20,
+    comment: '密码'
   })
   password: string = '';
 
@@ -45,7 +47,7 @@ class User {
     length: 20,
     comment: '创建时间'
   })
-  createTime: number = 0
+  createTime: string = '';
 
   @OneToMany(() => Article, article => article.user)
   articles!: Article[];

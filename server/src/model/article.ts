@@ -1,5 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne, JoinColumn, JoinTable } from 'typeorm';
 import User from './user';
+import Tag from './tag';
+import Category from './category';
 
 @Entity({
   name: 'article'
@@ -59,14 +61,14 @@ class Article {
     length: 20,
     comment: '创建时间'
   })
-  createTime: number = 0
+  createTime: string = '';
 
   @Column({
     type: 'varchar',
     length: 20,
     comment: '修改时间'
   })
-  updateTime: number = 0
+  updateTime: string = '';
 
   @ManyToOne(() => User, user => user.articles)
   @Column({
@@ -75,6 +77,23 @@ class Article {
     comment: '用户ID'
   })
   user: User = new User();
+
+  @ManyToOne(() => Category, category => category.articles)
+  @Column({
+    name: 'categoryId',
+    type: 'int',
+    comment: '分类ID'
+  })
+  category: Category = new Category();
+
+  @ManyToMany(() => Tag, tag => tag.articles)
+  @JoinTable()
+  @Column({
+    name: 'tagId',
+    type: 'int',
+    comment: '标签ID'
+  })
+  tags!: Tag[];
 }
 
 export default Article

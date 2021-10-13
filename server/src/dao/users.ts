@@ -17,6 +17,9 @@ const userDAO = {
   updateUser: async (user: User) => {
     return await userRepository().save(user);
   },
+  saveUser: async (user: User) => {
+    return await userRepository().save(user);
+  },
   removeUser: async (id: number) => {
     return await userRepository().delete(id);
   }
