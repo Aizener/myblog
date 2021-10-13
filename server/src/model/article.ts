@@ -88,11 +88,6 @@ class Article {
 
   @ManyToMany(() => Tag, tag => tag.articles)
   @JoinTable()
-  @Column({
-    name: 'tagId',
-    type: 'int',
-    comment: '标签ID'
-  })
   tags!: Tag[];
 }
 

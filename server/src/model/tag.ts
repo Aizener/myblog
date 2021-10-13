@@ -16,11 +16,6 @@ class Tag {
   title: string = '';
 
   @ManyToMany(() => Article, article => article.tags)
-  @Column({
-    name: 'articleId',
-    type: 'int',
-    comment: '文章ID'
-  })
   articles!: Article[];
 
   @Column({
