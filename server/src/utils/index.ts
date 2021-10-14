@@ -47,15 +47,6 @@ export const isEmpty = (param: any): boolean => {
   }
 }
 
-// 处理next的异常抛出
-export const handleErrorNext = (err: any, next: NextFunction) => {
-  next({
-    code: err.code,
-    data: null,
-    msg: err.msg
-  })
-}
-
 // 获取当前的时间，例：2021-10-14 22:32
 export const getCurrentDateTime = (): string =>  {
   const date = new Date();
@@ -69,10 +60,20 @@ export const getCurrentDateTime = (): string =>  {
   return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
 
+// 处理next的异常抛出
+export const handleErrorNext = (err: any, next: NextFunction) => {
+  next({
+    code: err.code,
+    data: null,
+    msg: err.msg
+  })
+}
+
 // 错误处理函数
 export const responseErrorCallback = (err: any, req: Request, res: Response, next: NextFunction) => {
   res.json({
-    path: req.path,
+    url: `${req.protocol}//${req.hostname}:${req.socket.localPort}${req.path}`,
+    ip: req.ip,
     code: err.code,
     data: err.data,
     msg: toString(err.msg).includes('Error') ? err.msg.message : err.msg
