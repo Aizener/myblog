@@ -40,9 +40,7 @@ router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
 router.post('/add', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const _user = filterParams<User>(req.body, User);
-    await checkParamsIsNull(_user, ['email', 'password']).catch(err => {
-      throw { msg: err, code: ResponseCode.INVALID_PARAMS }
-    })
+    await checkParamsIsNull(_user, ['email', 'password'])
   
     const user = await userService.addUser(_user).catch(err => {
       throw { msg: err, code: ResponseCode.SERVICE_ERROR }
@@ -61,9 +59,7 @@ router.post('/add', async (req: Request, res: Response, next: NextFunction) => {
 router.put('/update', async(req: Request, res: Response, next: NextFunction) => {
   try {
     const _user = filterParams<User>(req.body, User);
-    await checkParamsIsNull(_user, ['id']).catch(err => {
-      throw { msg: err, code: ResponseCode.INVALID_PARAMS }
-    })
+    await checkParamsIsNull(_user, ['id'])
   
     const user = await userService.updateUser(_user).catch(err => {
       throw { msg: err, code: ResponseCode.SERVICE_ERROR }

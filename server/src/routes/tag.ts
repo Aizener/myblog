@@ -9,9 +9,8 @@ const router = express.Router();
 
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const tags = await tagService.find().catch(err => {
-      throw { msg: err, code: ResponseCode.SERVICE_ERROR }
-    })
+    const tags = await tagService.find()
+
     res.json({
       code: ResponseCode.SUCCESS,
       data: tags || null
@@ -23,9 +22,7 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
 
 router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const tag = await tagService.findTagById(Number(req.params.id)).catch(err => {
-      throw { msg: err, code: ResponseCode.SERVICE_ERROR }
-    })
+    const tag = await tagService.findTagById(Number(req.params.id))
   
     res.json({
       code: ResponseCode.SUCCESS,
@@ -39,9 +36,7 @@ router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
 router.post('/add', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const _tag = filterParams<Tag>(req.body, Tag);
-    await checkParamsIsNull(_tag, ['title']).catch(err => {
-      throw { msg: err, code: ResponseCode.INVALID_PARAMS }
-    })
+    await checkParamsIsNull(_tag, ['title'])
   
     const tag = await tagService.addTag(_tag).catch(err => {
       throw { msg: err, code: ResponseCode.SERVICE_ERROR }
@@ -59,9 +54,7 @@ router.post('/add', async (req: Request, res: Response, next: NextFunction) => {
 router.put('/update', async(req: Request, res: Response, next: NextFunction) => {
   try {
     const _tag = filterParams<Tag>(req.body, Tag);
-    await checkParamsIsNull(_tag, ['id']).catch(err => {
-      throw { msg: err, code: ResponseCode.INVALID_PARAMS }
-    })
+    await checkParamsIsNull(_tag, ['id'])
   
     const tag = await tagService.updateTag(_tag).catch(err => {
       throw { msg: err, code: ResponseCode.INVALID_PARAMS }
@@ -79,6 +72,7 @@ router.put('/update', async(req: Request, res: Response, next: NextFunction) => 
 router.delete('/remove/:id', async(req: Request, res: Response, next: NextFunction) => {
   try {
     const id = Number(req.params.id);
+
     const affected = await tagService.removeTag(id).catch(err => {
       throw { msg: err, code: ResponseCode.SERVICE_ERROR }
     })

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import ResponseCode from './code';
 
 // 根据实体类来过滤参数
 export const filterParams = <T>(params: any, Model: any): T  => {
@@ -25,7 +26,10 @@ export const checkParamsIsNull = (obj: any, params: Array<string>): Promise<any>
   return new Promise((resolve, reject) => {
     for (let param of params)     {
       if (isEmpty(obj[param])) {
-        reject(`Param Error: 参数${param}为${obj[param] || null}，不是合法值！`)
+        reject({
+          msg: `Param Error: 参数${param}为${obj[param] || null}，不是合法值！`,
+          code: ResponseCode.INVALID_PARAMS
+        })
       }
     }
     resolve(null)
