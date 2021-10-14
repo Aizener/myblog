@@ -2,26 +2,26 @@
 import { getRepository } from "typeorm";
 import Tag from "../model/tag";
 
-const userRepository = () => getRepository(Tag);
+const tagRepository = () => getRepository(Tag);
 
 const tagDAO = {
   findTagById: async (id: number) => {
-    return await userRepository().findOne(id);
+    return await tagRepository().findOne(id);
   },
   find: async () => {
-    return await userRepository().find();
+    return await tagRepository().find();
   },
   addTag: async (tag: Tag) => {
-    return await userRepository().save(tag);
+    return await tagRepository().save(tag);
   },
   updateTag: async (tag: Tag) => {
-    return await userRepository().save(tag);
+    return await tagRepository().save(tag);
   },
   saveTag: async (tag: Tag) => {
-    return await userRepository().save(tag);
+    return await tagRepository().save(tag);
   },
   removeTag: async (id: number) => {
-    return await userRepository().delete(id);
+    return await tagRepository().delete(id);
   }
 }
 
