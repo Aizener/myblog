@@ -6,6 +6,7 @@ import logger from 'morgan';
 
 import usersRouter from './routes/users';
 import tagRouter from './routes/tag';
+import musicRouter from './routes/music';
 
 import swaggerUi from 'swagger-ui-express';
 
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/user', usersRouter);
 app.use('/tag', tagRouter);
+app.use('/music', musicRouter);
 
 app.use(responseErrorCallback);
 
