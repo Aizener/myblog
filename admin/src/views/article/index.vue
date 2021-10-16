@@ -60,6 +60,7 @@ export default defineComponent({
       articleForm: {
         title: { label: '标题', value: '', type: 'input' },
         desc: { label: '描述', value: '', type: 'text' },
+        content: { label: '文章内容', value: '', type: 'md'  },
         cover: { label: '封面图', value: '', type: 'file' },
         category: { label: '分类', value: '', type: 'select', options: [{label: '分类', value: 0}, {label: '分类2', value: 1}] },
         tag: { label: '标签', value: '', type: 'select', options: [{label: '标签', value: 0}, {label: '标签', value: 2}] },
@@ -67,6 +68,7 @@ export default defineComponent({
       articleRules: {
         title: { required: true, trigger: 'blur', message: '请输入文章标题' },
         desc: { required: true, trigger: 'blur', message: '请输入文章描述' },
+        content: { required: true, trigger: 'blur', message: '请输入文章内容够' },
         category: { required: true, trigger: 'change', message: '请选择分类' },
         tag: { required: true, trigger: 'change', message: '请选择标签' }
       }

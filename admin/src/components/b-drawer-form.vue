@@ -4,13 +4,13 @@
       custom-class="addedit"
       :title="title"
       v-model="modelValue"
-      size="700px"
+      size="800px"
       :close-on-click-modal="false"
       :show-close="false"
     >
       <el-form ref="formRef" :model="model" class="addedit" :rules="formRules">
         <el-form-item
-          label-width="80px"
+          label-width="90px"
           :label="item.label + '：'"
           :prop="idx"
           v-for="(item, idx) in formData"
@@ -19,7 +19,7 @@
           <template v-if="item.type === 'input'">
             <el-input v-model="model[idx]" :placeholder="`请输入${item.label}`"></el-input>
           </template>
-          <template v-if="item.type === 'text'">
+          <template v-else-if="item.type === 'text'">
             <el-input v-model="model[idx]" type="textarea" :rows="3" :placeholder="`请输入${item.label}`"></el-input>
           </template>
           <template v-else-if="item.type === 'select'">
@@ -33,7 +33,7 @@
               </el-option>
             </el-select>
           </template>
-          <template v-if="item.type === 'file'">
+          <template v-else-if="item.type === 'file'">
             <el-upload
               action="https://jsonplaceholder.typicode.com/posts/"
               list-type="picture-card"
@@ -51,6 +51,12 @@
               <img width="100%" src="" alt="" />
             </el-dialog>
           </template>
+          <template v-else-if="item.type === 'md'">
+            <md-editor :preview="false" editorClass="b-editor" v-model="model[idx]" />
+          </template>
+          <template v-else>
+            <slot :row="item"></slot>
+          </template>
         </el-form-item>
       </el-form>
 
@@ -64,8 +70,13 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import MdEditor from 'md-editor-v3';
+import 'md-editor-v3/lib/style.css';
 
 export default defineComponent({
+  components: {
+    MdEditor
+  },
   props: {
     modelValue: {
       type: Boolean,
@@ -136,11 +147,28 @@ export default defineComponent({
 .b-drawer-form {
   & /deep/ .addedit {
     padding: 0 15px;
+    overflow-y: scroll;
+    padding-bottom: 30px;
+    &::-webkit-scrollbar {
+      width: 0;
+    }
   }
   .operate {
     display: flex;
-    margin-left: 95px;
-    margin-top: 30px;
+    margin-left: 105px;
+  }
+  .b-editor {
+    & ::v-deep .md-toolbar {
+      min-width: unset;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      height: 70px;
+      border-bottom: 1px solid #eee;
+    }
+    & ::v-deep .md-content {
+      height: calc(100% - 70px - 2 * 4px - 2px);
+    }
   }
 }
 </style>
