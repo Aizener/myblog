@@ -1,5 +1,15 @@
 <template>
   <div class="b-table">
+    <div class="b-table-header">
+      <el-input
+        size="small"
+        :placeholder="`请输入${item.label}`"
+        v-for="(item, idx) in inputs"
+        v-model="item.value"
+        :key="idx"
+      ></el-input>
+      <el-button type="primary" size="small" @click="handleSearch" v-if="Object.keys(inputs).length">搜索</el-button>
+    </div>
     <el-table
       :data="data"
       border
@@ -35,24 +45,47 @@
 </template>
 
 <script lang="ts">
-import { getTableHeader } from '@/utils/table';
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, toRefs, ref } from 'vue';
 
 export default defineComponent({
   props: {
     data: {
       type: Object,
-      default: () => []
+      required: true
+    },
+    tableHeader: {
+      type: Object,
+      required: true
     },
     type: {
       type: String,
       required: true
     }
   },
-  setup(props, { slots }) {
-    const tableHeader = getTableHeader(props.type);
+  setup(props, { emit }) {
+    const keys = Object.keys(props.tableHeader).filter(key => {
+      return props.tableHeader[key].search
+    });
+
+    const inputs = ref<any>({});
+    for (const key in props.tableHeader) {
+      if (props.tableHeader[key].search) {
+        inputs.value[key] = { value: '', ...props.tableHeader[key] }
+      }
+    }
+
+    const handleSearch = () => {
+      const conditions: any = {}
+      for (const key in inputs.value) {
+        conditions[key] = inputs.value[key].value;
+      }
+      
+      emit('search', conditions);
+    }
+
     return {
-      tableHeader
+      inputs,
+      handleSearch
     }
   }
 })
@@ -62,6 +95,13 @@ export default defineComponent({
 .b-table {
   width: 100%;
   padding: 30px;
+  &-header {
+    .el-input {
+      width: 200px;
+      margin-right: 15px;
+      margin-bottom: 15px;
+    }
+  }
   .page {
     display: flex;
     justify-content: center;
