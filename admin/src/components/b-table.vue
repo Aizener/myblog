@@ -9,9 +9,13 @@
         :key="idx"
       ></el-input>
       <el-button type="primary" size="small" @click="handleSearch" v-if="Object.keys(inputs).length">搜索</el-button>
+      <el-button type="success" size="small" @click="$emit('add')">添加</el-button>
+      <el-button type="danger" size="small" @click="handleRemove" :disabled="!ids.length">批量删除</el-button>
     </div>
     <el-table
       :data="data"
+      @select="selectOne"
+      @select-all="selectAll"
       border
     >
       <el-table-column prop="id" type="selection" width="55" />
@@ -83,9 +87,26 @@ export default defineComponent({
       emit('search', conditions);
     }
 
+    const ids = ref<Array<number>>([]);
+
+    const selectOne = (selection: any) => {
+      ids.value = selection.map((item: any) => item.id);
+    }
+    const selectAll = (selection: any) => {
+      ids.value = selection.map((item: any) => item.id);
+    }
+
+    const handleRemove = () => {
+      emit('removeMulti', ids.value);
+    }
+
     return {
+      ids,
       inputs,
-      handleSearch
+      handleSearch,
+      selectOne,
+      handleRemove,
+      selectAll
     }
   }
 })
@@ -96,6 +117,7 @@ export default defineComponent({
   width: 100%;
   padding: 30px;
   &-header {
+    margin-bottom: 15px;
     .el-input {
       width: 200px;
       margin-right: 15px;

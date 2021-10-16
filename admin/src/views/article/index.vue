@@ -1,11 +1,13 @@
 <template>
-  <div>
+  <div class="article">
     <b-table
       type="article"
       :data="tableData"
       :table-header="tableHeader"
+      @add="showDrawer = true"
       @edit="handleEdit"
       @remove="handleRemove"
+      @remove-multi="handleRemoveMulti"
     >
       <template v-slot="scope">
         <el-image 
@@ -32,18 +34,44 @@
         ></el-pagination>
       </template>
     </b-table>
+    <b-drawer-form
+      title="文章添加"
+      v-model="showDrawer"
+      :form-data="articleForm"
+      :form-rules="articleRules"
+      @confirm="hanndleConfirm"
+    ></b-drawer-form>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, reactive, ref, toRefs } from 'vue';
 import BTable from '@/components/b-table.vue';
+import BDrawerForm from '@/components/b-drawer-form.vue';
 
 export default defineComponent({
   components: {
-    BTable
+    BTable,
+    BDrawerForm
   },
   setup(props) {
+    const showDrawer = ref(false);
+    const state = reactive({
+      articleForm: {
+        title: { label: '标题', value: '', type: 'input' },
+        desc: { label: '描述', value: '', type: 'text' },
+        cover: { label: '封面图', value: '', type: 'file' },
+        category: { label: '分类', value: '', type: 'select', options: [{label: '分类', value: 0}, {label: '分类2', value: 1}] },
+        tag: { label: '标签', value: '', type: 'select', options: [{label: '标签', value: 0}, {label: '标签', value: 2}] },
+      },
+      articleRules: {
+        title: { required: true, trigger: 'blur', message: '请输入文章标题' },
+        desc: { required: true, trigger: 'blur', message: '请输入文章描述' },
+        category: { required: true, trigger: 'change', message: '请选择分类' },
+        tag: { required: true, trigger: 'change', message: '请选择标签' }
+      }
+    })
+
     const handleEdit = (row: any) => {
       console.log(row)
     }
@@ -52,10 +80,22 @@ export default defineComponent({
       console.log(row)
     }
 
+    const handleRemoveMulti = (ids: Array<number>) => {
+      console.log(ids);
+    }
+
+    const hanndleConfirm = (model: any) => {
+      console.log(model)
+    }
+
 
     return {
+      ...state,
+      showDrawer,
       handleEdit,
-      handleRemove
+      handleRemove,
+      handleRemoveMulti,
+      hanndleConfirm
     }
   },
   data() {
@@ -119,14 +159,19 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.cover {
-  width: 100%;
-  height: 100%;
+.article {
+  .cover {
+    width: 100%;
+    height: 100%;
+  }
+  .line-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .addedit {
+    padding: 15px;
+  }
 }
 
-.line-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
 </style>
