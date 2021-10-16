@@ -357,10 +357,10 @@ const routes: Array<RouteRecordRaw> = [
   //     }
   //   ]
   // },
-  // {
-  //   path: '/login',
-  //   component: Login
-  // },
+  {
+    path: '/login',
+    component: Login
+  },
   {
     path: '/:pathMatch(.*)*',
     component: NotFound
