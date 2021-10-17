@@ -1,6 +1,6 @@
 import Axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
-const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'ip'
+const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'ip'
 
 const instance = Axios.create({
   baseURL,

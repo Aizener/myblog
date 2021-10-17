@@ -1,0 +1,1 @@
+export const qiniu = 'http://up-z2.qiniup.com';

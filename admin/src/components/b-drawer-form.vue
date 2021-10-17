@@ -35,12 +35,12 @@
           </template>
           <template v-else-if="item.type === 'file'">
             <el-upload
-              action="https://jsonplaceholder.typicode.com/posts/"
+              :action="qiniu"
               list-type="picture-card"
+              :data="qiniuData"
               accept="image/*"
               :multiple="false"
               :limit="1"
-              :auto-upload="false"
               :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove"
               :on-success="handleUploaded"
@@ -69,9 +69,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, getCurrentInstance, onBeforeMount, ref } from 'vue';
 import MdEditor from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
+import { qiniu } from '@/config/index';
+import { getQiniuToken } from '@/utils/api/upload';
 
 export default defineComponent({
   components: {
@@ -97,6 +99,23 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const formRef = ref();
+
+    const qiniuData = ref();
+    const { proxy }: any = getCurrentInstance();
+
+    onBeforeMount(async () => {
+      const res: any = await getQiniuToken();
+      if (res.code !== 200) {
+        proxy.$message.error({
+          type: 'error',
+          message: '获取七牛云Token失败，无法进行文件上传！'
+        })
+      } else {
+        qiniuData.value = {
+          token: res.data
+        }
+      }
+    })
     
     // 自定义一份表单model数据
     const model = ref<any>({});
@@ -132,7 +151,9 @@ export default defineComponent({
 
     return {
       model,
+      qiniuData,
       formRef,
+      qiniu,
       dialogVisible,
       handleAdd,
       handlePictureCardPreview,

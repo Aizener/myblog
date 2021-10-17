@@ -8,7 +8,10 @@ import usersRouter from './routes/users';
 import tagRouter from './routes/tag';
 import musicRouter from './routes/music';
 
+import uploadRouter from './routes/upload';
+
 import swaggerUi from 'swagger-ui-express';
+import cors from 'cors';
 
 import './dao/db';
 import { responseErrorCallback } from './utils';
@@ -23,9 +26,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(cors({
+  origin: 'http://localhost:8080',
+  optionsSuccessStatus: 200
+}));
 app.use('/user', usersRouter);
 app.use('/tag', tagRouter);
 app.use('/music', musicRouter);
+
+app.use('/upload', uploadRouter);
 
 app.use(responseErrorCallback);
 
