@@ -36,7 +36,7 @@ class Article {
     length: 100,
     comment: '内容'
   })
-  text: string = '';
+  content: string = '';
 
   @Column({
     type: 'int',

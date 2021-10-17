@@ -45,9 +45,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, toRefs } from 'vue';
+import { defineComponent, getCurrentInstance, reactive, ref, toRefs } from 'vue';
 import BTable from '@/components/b-table.vue';
 import BDrawerForm from '@/components/b-drawer-form.vue';
+import useData from './useData';
+import { ArticleType } from '@/config/type';
+import { addArticle } from '@/utils/api/article';
 
 export default defineComponent({
   components: {
@@ -62,17 +65,21 @@ export default defineComponent({
         desc: { label: '描述', value: '', type: 'text' },
         content: { label: '文章内容', value: '', type: 'md'  },
         cover: { label: '封面图', value: '', type: 'file' },
-        category: { label: '分类', value: '', type: 'select', options: [{label: '分类', value: 0}, {label: '分类2', value: 1}] },
-        tag: { label: '标签', value: '', type: 'select', options: [{label: '标签', value: 0}, {label: '标签', value: 2}] },
+        category: { label: '分类', value: undefined, type: 'select' },
+        tags: { label: '标签', value: [], type: 'select-multi' },
       },
       articleRules: {
         title: { required: true, trigger: 'blur', message: '请输入文章标题' },
         desc: { required: true, trigger: 'blur', message: '请输入文章描述' },
-        content: { required: true, trigger: 'blur', message: '请输入文章内容够' },
+        content: { required: true, trigger: 'blur', message: '请输入文章内容' },
+        cover: { required: true, trigger: 'change', message: '请选择文章封面图' },
         category: { required: true, trigger: 'change', message: '请选择分类' },
-        tag: { required: true, trigger: 'change', message: '请选择标签' }
+        tags: { required: true, trigger: 'change', message: '请选择标签' }
       }
     })
+
+    useData(state);
+    const { proxy }: any = getCurrentInstance();
 
     const handleEdit = (row: any) => {
       console.log(row)
@@ -86,8 +93,18 @@ export default defineComponent({
       console.log(ids);
     }
 
-    const hanndleConfirm = (model: any) => {
-      console.log(model)
+    const hanndleConfirm = async (model: ArticleType) => {
+      const res: any = await addArticle(model);
+      if (res.code === 200) {
+        proxy.$message.success({
+          message: res.msg
+        })
+      } else {
+        proxy.$message.error({
+          message: res.msg
+        })
+      }
+      showDrawer.value = false;
     }
 
 

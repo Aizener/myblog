@@ -7,6 +7,8 @@ import logger from 'morgan';
 import usersRouter from './routes/users';
 import tagRouter from './routes/tag';
 import musicRouter from './routes/music';
+import articleRouter from './routes/article';
+import categoryRouter from './routes/category';
 
 import uploadRouter from './routes/upload';
 
@@ -33,6 +35,8 @@ app.use(cors({
 app.use('/user', usersRouter);
 app.use('/tag', tagRouter);
 app.use('/music', musicRouter);
+app.use('/category', categoryRouter);
+app.use('/article', articleRouter);
 
 app.use('/upload', uploadRouter);
 

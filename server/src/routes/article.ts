@@ -1,5 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import Article from "../model/article";
+import Tag from "../model/tag";
+import User from "../model/user";
 
 import articleService from '../service/article';
 import ResponseCode from "../utils/code";
@@ -35,8 +37,12 @@ router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
 
 router.post('/add', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const _article = filterParams<Article>(req.body, Article);
-    await checkParamsIsNull(_article, ['title', 'desc', 'cover', 'text', 'view', 'userId', 'categoryId', 'tagId'])
+    const params = req.body;
+    const _article = filterParams<Article>(params, Article);
+    const user = new User();
+    user.id = 1;
+    _article.user = user;
+    await checkParamsIsNull(_article, ['title', 'desc', 'cover', 'content', 'category', 'tags'])
   
     const article = await articleService.addArticle(_article).catch(err => {
       throw { msg: err, code: ResponseCode.SERVICE_ERROR }
@@ -44,6 +50,7 @@ router.post('/add', async (req: Request, res: Response, next: NextFunction) => {
     
     res.json({
       code: 200,
+      msg: '文章添加成功',
       data: article
     })
   } catch(err: any) {

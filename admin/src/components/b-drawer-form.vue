@@ -10,7 +10,7 @@
     >
       <el-form ref="formRef" :model="model" class="addedit" :rules="formRules">
         <el-form-item
-          label-width="90px"
+          label-width="95px"
           :label="item.label + '：'"
           :prop="idx"
           v-for="(item, idx) in formData"
@@ -33,22 +33,33 @@
               </el-option>
             </el-select>
           </template>
+          <template v-else-if="item.type === 'select-multi'">
+            <el-select v-model="model[idx]" multiple :placeholder="`请选择${item.label}`">
+              <el-option
+                v-for="_item in item.options"
+                :key="_item.value"
+                :label="_item.label"
+                :value="_item.value"
+              >
+              </el-option>
+            </el-select>
+          </template>
           <template v-else-if="item.type === 'file'">
             <el-upload
-              :action="qiniu"
+              :action="qiniuUpload"
               list-type="picture-card"
               :data="qiniuData"
               accept="image/*"
               :multiple="false"
               :limit="1"
+              :on-remove="handleRemove(idx)"
               :on-preview="handlePictureCardPreview"
-              :on-remove="handleRemove"
-              :on-success="handleUploaded"
+              :on-success="handleUploaded(idx)"
             >
               <i class="el-icon-plus"></i>
             </el-upload>
             <el-dialog v-model="dialogVisible">
-              <img width="100%" src="" alt="" />
+              <img class="preview-img" :src="qiniuPreview + model[idx]" alt="" />
             </el-dialog>
           </template>
           <template v-else-if="item.type === 'md'">
@@ -72,7 +83,7 @@
 import { defineComponent, getCurrentInstance, onBeforeMount, ref } from 'vue';
 import MdEditor from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
-import { qiniu } from '@/config/index';
+import { qiniuUpload, qiniuPreview } from '@/config/index';
 import { getQiniuToken } from '@/utils/api/upload';
 
 export default defineComponent({
@@ -100,8 +111,9 @@ export default defineComponent({
   setup(props, { emit }) {
     const formRef = ref();
 
-    const qiniuData = ref();
     const { proxy }: any = getCurrentInstance();
+    const qiniuData = ref();
+    const previewImage = ref();
 
     onBeforeMount(async () => {
       const res: any = await getQiniuToken();
@@ -133,8 +145,10 @@ export default defineComponent({
     }
 
     // 移除图片
-    const handleRemove = () => {
-      console.log('remove')
+    const handleRemove = (key: string) => {
+      return () => {
+        model.value[key] = '';
+      }
     }
 
     // 预览图片
@@ -143,17 +157,20 @@ export default defineComponent({
     }
 
     // 上传图片的回调
-    const handleUploaded = (e: any) => {
-      console.log(e)
-    }
+    const handleUploaded = (key: string) => {
+      return (e: any) => {
+        model.value[key] = e.hash;
+      }
+    } 
 
     const dialogVisible = ref(false);
 
     return {
       model,
+      qiniuUpload,
+      qiniuPreview,
       qiniuData,
       formRef,
-      qiniu,
       dialogVisible,
       handleAdd,
       handlePictureCardPreview,
@@ -190,6 +207,10 @@ export default defineComponent({
     & ::v-deep .md-content {
       height: calc(100% - 70px - 2 * 4px - 2px);
     }
+  }
+
+  & ::v-deep .preview-img {
+    width: 100%;
   }
 }
 </style>
