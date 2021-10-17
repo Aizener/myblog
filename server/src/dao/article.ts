@@ -1,5 +1,5 @@
 // import { select, update } from './db'
-import { getRepository } from "typeorm";
+import { getRepository, Like } from "typeorm";
 import Article from "../model/article";
 
 const articleRepository = () => getRepository(Article);
@@ -8,8 +8,17 @@ const articleDAO = {
   findArticleById: async (id: number) => {
     return await articleRepository().findOne(id);
   },
-  find: async () => {
-    return await articleRepository().find();
+  find: async (page: number, size: number, title: string, desc: string) => {
+    const conditions: any = {
+      take: size,
+      skip: (page - 1) * size,
+      where: {},
+      relations: ['category', 'tags']
+    }
+    title && (conditions.where.title = Like(`%${title}`));
+    desc && (conditions.where.desc = Like(`%${desc}`));
+
+    return await articleRepository().findAndCount(conditions);
   },
   addArticle: async (article: Article) => {
     return await articleRepository().save(article);

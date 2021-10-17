@@ -3,7 +3,7 @@
     <el-drawer
       custom-class="addedit"
       :title="title"
-      v-model="modelValue"
+      v-model="show"
       size="800px"
       :close-on-click-modal="false"
       :show-close="false"
@@ -46,8 +46,9 @@
           </template>
           <template v-else-if="item.type === 'file'">
             <el-upload
-              :action="qiniuUpload"
+              ref="uploadRef"
               list-type="picture-card"
+              :action="qiniuUpload"
               :data="qiniuData"
               accept="image/*"
               :multiple="false"
@@ -80,7 +81,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, getCurrentInstance, onBeforeMount, ref } from 'vue';
+import { defineComponent, getCurrentInstance, onBeforeMount, ref, toRefs } from 'vue';
 import MdEditor from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import { qiniuUpload, qiniuPreview } from '@/config/index';
@@ -110,6 +111,8 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const formRef = ref();
+    const uploadRef = ref();
+    const { modelValue: show } = toRefs(props)
 
     const { proxy }: any = getCurrentInstance();
     const qiniuData = ref();
@@ -161,12 +164,21 @@ export default defineComponent({
       return (e: any) => {
         model.value[key] = e.hash;
       }
-    } 
+    }
+
+    // 清空表单
+    const resetForm = () => {
+      uploadRef.value.clearFiles();
+      formRef.value.resetFields();
+    }
 
     const dialogVisible = ref(false);
 
     return {
+      show,
       model,
+      resetForm,
+      uploadRef,
       qiniuUpload,
       qiniuPreview,
       qiniuData,

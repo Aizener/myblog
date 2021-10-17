@@ -11,11 +11,13 @@ const router = express.Router();
 
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const articles = await articleService.find()
+    await checkParamsIsNull(req.query, ['page', 'size']);
+    const [articles, total] = await articleService.find(req.query);
 
     res.json({
       code: ResponseCode.SUCCESS,
-      data: articles || null
+      data: articles || null,
+      total: total
     })
   } catch(err) {
     handleErrorNext(err, next);
@@ -42,7 +44,7 @@ router.post('/add', async (req: Request, res: Response, next: NextFunction) => {
     const user = new User();
     user.id = 1;
     _article.user = user;
-    await checkParamsIsNull(_article, ['title', 'desc', 'cover', 'content', 'category', 'tags'])
+    await checkParamsIsNull(_article, ['title', 'desc', 'cover', 'content', 'category', 'tags']);
   
     const article = await articleService.addArticle(_article).catch(err => {
       throw { msg: err, code: ResponseCode.SERVICE_ERROR }
