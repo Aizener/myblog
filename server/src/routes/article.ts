@@ -37,7 +37,7 @@ router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.post('/add', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/save', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const params = req.body;
     const _article = filterParams<Article>(params, Article);
@@ -53,6 +53,29 @@ router.post('/add', async (req: Request, res: Response, next: NextFunction) => {
     res.json({
       code: 200,
       msg: '文章添加成功',
+      data: article
+    })
+  } catch(err: any) {
+    handleErrorNext(err, next);
+  }
+});
+
+router.put('/save', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const params = req.body;
+    const _article = filterParams<Article>(params, Article);
+    const user = new User();
+    user.id = 1;
+    _article.user = user;
+    await checkParamsIsNull(_article, ['title', 'desc', 'cover', 'content', 'category', 'tags']);
+  
+    const article = await articleService.addArticle(_article).catch(err => {
+      throw { msg: err, code: ResponseCode.SERVICE_ERROR }
+    });
+    
+    res.json({
+      code: 200,
+      msg: '文章编辑成功',
       data: article
     })
   } catch(err: any) {

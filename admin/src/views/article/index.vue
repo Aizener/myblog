@@ -25,7 +25,10 @@
           </el-tooltip>
         </div>
         <div class="tags-wrapper" v-if="scope.col === 'tags'">
-          <p class="tags" v-for="(item, idx) in scope.row.tags" :key="idx">{{ item }}</p>
+          <p class="tags" v-for="(item, idx) in getTags(scope.row.tags)" :key="idx">{{ item }}</p>
+        </div>
+        <div v-if="scope.col === 'category'">
+          <p>{{ getCategory(scope.row.category) }}</p>
         </div>
       </template>
     </b-table>
@@ -49,13 +52,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, getCurrentInstance, reactive, ref, toRefs } from 'vue';
+import { computed, defineComponent, getCurrentInstance, reactive, ref, toRefs } from 'vue';
 import BTable from '@/components/b-table.vue';
 import BDrawerForm from '@/components/b-drawer-form.vue';
 import initData from './initData';
 import { ArticleType } from '@/config/type';
-import { addArticle } from '@/utils/api/article';
 import { qiniuPreview } from '@/config/index';
+import useForm from './useForm';
 
 export default defineComponent({
   components: {
@@ -63,8 +66,6 @@ export default defineComponent({
     BDrawerForm
   },
   setup(props) {
-    const showDrawer = ref(false);
-    const drawForm = ref();
     const state = reactive<{
       articleForm: any,
       articleRules: any,
@@ -108,36 +109,7 @@ export default defineComponent({
         size: 6
       }
     })
-
-    const { proxy }: any = getCurrentInstance();
     const { initArticleData }: any = initData(state);
-
-    const handleEdit = (row: any) => {
-      console.log(row)
-    }
-
-    const handleRemove = (row: any) => {
-      console.log(row)
-    }
-
-    const handleRemoveMulti = (ids: Array<number>) => {
-      console.log(ids);
-    }
-
-    const hanndleConfirm = async (model: any) => {
-      const res: any = await addArticle(model);
-      if (res.code === 200) {
-        proxy.$message.success({
-          message: res.msg
-        })
-        drawForm.value.resetForm();
-      } else {
-        proxy.$message.error({
-          message: res.msg
-        })
-      }
-      showDrawer.value = false;
-    }
 
     const handleChangePage = (page: number) => {
       state.seoForm.page = page;
@@ -152,9 +124,21 @@ export default defineComponent({
       initArticleData();
     }
 
+    const {
+      getTags,
+      getCategory,
+      showDrawer,
+      drawForm,
+      handleEdit,
+      handleRemove,
+      handleRemoveMulti,
+      hanndleConfirm
+    } = useForm(state, initArticleData);
 
     return {
       ...toRefs(state),
+      getTags,
+      getCategory,
       qiniuPreview,
       showDrawer,
       drawForm,

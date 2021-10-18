@@ -27,8 +27,8 @@ const initData = (state: any) => {
       state.tableData = articleRes.data.map((item: any) => {
         const result = {
           ...item,
-          category: item.category.title,
-          tags: item.tags.map((_item: any) => _item.title)
+          category: item.category.id,
+          tags: item.tags.map((_item: any) => _item.id)
         }
         return result;
       });

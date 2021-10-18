@@ -9,67 +9,69 @@
       :show-close="false"
     >
       <el-form ref="formRef" :model="model" class="addedit" :rules="formRules">
-        <el-form-item
-          label-width="95px"
-          :label="item.label + '：'"
-          :prop="idx"
-          v-for="(item, idx) in formData"
-          :key="idx"
-        >
-          <template v-if="item.type === 'input'">
-            <el-input v-model="model[idx]" :placeholder="`请输入${item.label}`"></el-input>
-          </template>
-          <template v-else-if="item.type === 'text'">
-            <el-input v-model="model[idx]" type="textarea" :rows="3" :placeholder="`请输入${item.label}`"></el-input>
-          </template>
-          <template v-else-if="item.type === 'select'">
-            <el-select v-model="model[idx]" :placeholder="`请选择${item.label}`">
-              <el-option
-                v-for="_item in item.options"
-                :key="_item.value"
-                :label="_item.label"
-                :value="_item.value"
+        <template v-for="(item, idx) in formData" :key="idx">
+          <el-form-item
+            label-width="95px"
+            :label="item.label + '：'"
+            :prop="idx"
+            v-if="idx !== 'id'"
+          >
+            <template v-if="item.type === 'input'">
+              <el-input v-model="model[idx]" :placeholder="`请输入${item.label}`"></el-input>
+            </template>
+            <template v-else-if="item.type === 'text'">
+              <el-input v-model="model[idx]" type="textarea" :rows="3" :placeholder="`请输入${item.label}`"></el-input>
+            </template>
+            <template v-else-if="item.type === 'select'">
+              <el-select v-model="model[idx]" :placeholder="`请选择${item.label}`">
+                <el-option
+                  v-for="_item in item.options"
+                  :key="_item.value"
+                  :label="_item.label"
+                  :value="_item.value"
+                >
+                </el-option>
+              </el-select>
+            </template>
+            <template v-else-if="item.type === 'select-multi'">
+              <el-select v-model="model[idx]" multiple :placeholder="`请选择${item.label}`">
+                <el-option
+                  v-for="_item in item.options"
+                  :key="_item.value"
+                  :label="_item.label"
+                  :value="_item.value"
+                >
+                </el-option>
+              </el-select>
+            </template>
+            <template v-else-if="item.type === 'file'">
+              <el-upload
+                ref="uploadRef"
+                list-type="picture-card"
+                :action="qiniuUpload"
+                :data="qiniuData"
+                accept="image/*"
+                :multiple="false"
+                :limit="1"
+                :file-list="model.id ? model[idx + '_files'] : []"
+                :on-remove="handleRemove(idx)"
+                :on-preview="handlePictureCardPreview"
+                :on-success="handleUploaded(idx)"
               >
-              </el-option>
-            </el-select>
-          </template>
-          <template v-else-if="item.type === 'select-multi'">
-            <el-select v-model="model[idx]" multiple :placeholder="`请选择${item.label}`">
-              <el-option
-                v-for="_item in item.options"
-                :key="_item.value"
-                :label="_item.label"
-                :value="_item.value"
-              >
-              </el-option>
-            </el-select>
-          </template>
-          <template v-else-if="item.type === 'file'">
-            <el-upload
-              ref="uploadRef"
-              list-type="picture-card"
-              :action="qiniuUpload"
-              :data="qiniuData"
-              accept="image/*"
-              :multiple="false"
-              :limit="1"
-              :on-remove="handleRemove(idx)"
-              :on-preview="handlePictureCardPreview"
-              :on-success="handleUploaded(idx)"
-            >
-              <i class="el-icon-plus"></i>
-            </el-upload>
-            <el-dialog v-model="dialogVisible">
-              <img class="preview-img" :src="qiniuPreview + model[idx]" alt="" />
-            </el-dialog>
-          </template>
-          <template v-else-if="item.type === 'md'">
-            <md-editor :preview="false" editorClass="b-editor" v-model="model[idx]" />
-          </template>
-          <template v-else>
-            <slot :row="item"></slot>
-          </template>
-        </el-form-item>
+                <i class="el-icon-plus"></i>
+              </el-upload>
+              <el-dialog v-model="dialogVisible">
+                <img class="preview-img" :src="qiniuPreview + model[idx]" alt="" />
+              </el-dialog>
+            </template>
+            <template v-else-if="item.type === 'md'">
+              <md-editor :preview="false" editorClass="b-editor" v-model="model[idx]" />
+            </template>
+            <template v-else>
+              <slot :row="item"></slot>
+            </template>
+          </el-form-item>
+        </template>
       </el-form>
 
       <div class="operate">
@@ -81,7 +83,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, getCurrentInstance, onBeforeMount, ref, toRefs } from 'vue';
+import { defineComponent, getCurrentInstance, onBeforeMount, ref, toRefs, watch } from 'vue';
 import MdEditor from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import { qiniuUpload, qiniuPreview } from '@/config/index';
@@ -134,9 +136,15 @@ export default defineComponent({
     
     // 自定义一份表单model数据
     const model = ref<any>({});
-    for (const key in props.formData) {
-      model.value[key] = props.formData[key].value;
-    }
+    watch(() => props.formData, () => {
+      for (const key in props.formData) {
+        model.value[key] = props.formData[key].value;
+        if (props.formData[key].type === 'file') {
+          model.value[key + '_files'] = [{ url: qiniuPreview + model.value[key] }]
+        }
+      }
+      console.log(model.value)
+    }, { deep: true })
 
     // 点击确定按钮
     const handleAdd = () => {
@@ -149,7 +157,8 @@ export default defineComponent({
 
     // 移除图片
     const handleRemove = (key: string) => {
-      return () => {
+      return (file: any, fileList: any) => {
+        console.log(file, fileList)
         model.value[key] = '';
       }
     }
@@ -170,6 +179,7 @@ export default defineComponent({
     const resetForm = () => {
       uploadRef.value.clearFiles();
       formRef.value.resetFields();
+      model.value = {};
     }
 
     const dialogVisible = ref(false);

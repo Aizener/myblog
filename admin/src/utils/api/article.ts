@@ -6,5 +6,9 @@ export const getArticleList = (params: any) => {
 }
 
 export const addArticle = (form: any) => {
-  return request.post('/article/add', form);
+  return request.post('/article/save', form);
+}
+
+export const editArticle = (form: any) => {
+  return request.put('/article/save', form);
 }
