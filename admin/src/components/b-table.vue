@@ -95,6 +95,10 @@ export default defineComponent({
     const selectAll = (selection: any) => {
       ids.value = selection.map((item: any) => item.id);
     }
+    const clearSelect = (_ids: Array<number>) => {
+      console.log(_ids);
+      ids.value = _ids.filter((item: number) => !_ids.includes(item));
+    }
 
     const handleRemove = () => {
       emit('removeMulti', ids.value);
@@ -104,6 +108,7 @@ export default defineComponent({
       ids,
       inputs,
       handleSearch,
+      clearSelect,
       selectOne,
       handleRemove,
       selectAll

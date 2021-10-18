@@ -12,3 +12,15 @@ export const addArticle = (form: any) => {
 export const editArticle = (form: any) => {
   return request.put('/article/save', form);
 }
+
+export const removeArticle = (id: number) => {
+  return request.delete(`/article/remove/${id}`);
+}
+
+export const removeArticleMulti = (ids: Array<number>) => {
+  return request.delete(`/article/remove/multi`, {
+    data: {
+      ids
+    }
+  });
+}

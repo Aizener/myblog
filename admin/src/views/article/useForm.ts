@@ -1,9 +1,11 @@
 import { getCurrentInstance, ref } from 'vue';
-import { addArticle, editArticle } from '@/utils/api/article';
+import { addArticle, editArticle, removeArticle, removeArticleMulti } from '@/utils/api/article';
     
 const useForm = (state: any, initArticleData: any) => {
   const showDrawer = ref(false);
   const drawForm = ref();
+  const tableRef = ref();
+
   const { proxy }: any = getCurrentInstance();
 
   const handleEdit = (row: any) => {
@@ -18,12 +20,44 @@ const useForm = (state: any, initArticleData: any) => {
     showDrawer.value = true;
   }
 
-  const handleRemove = (row: any) => {
-    console.log(row)
+  const handleRemove = async (row: any) => {
+    await proxy.$confirm('确定要删除这篇文章吗?', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    });
+    const res: any = await removeArticle(row.id);
+    if (res.code === 200) {
+      proxy.$message.success({
+        message: res.msg
+      })
+      initArticleData();
+      tableRef.value.clearSelect([row.id]);
+    } else {
+      proxy.$message.error({
+        message: res.msg
+      })
+    }
   }
 
-  const handleRemoveMulti = (ids: Array<number>) => {
-    console.log(ids);
+  const handleRemoveMulti = async (ids: Array<number>) => {
+    await proxy.$confirm('确定要删除这些文章吗?', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    });
+    const res: any = await removeArticleMulti(ids);
+    if (res.code === 200) {
+      proxy.$message.success({
+        message: res.msg
+      })
+      initArticleData();
+      tableRef.value.clearSelect(ids);
+    } else {
+      proxy.$message.error({
+        message: res.msg
+      })
+    }
   }
 
   const hanndleConfirm = async (model: any) => {
@@ -66,6 +100,7 @@ const useForm = (state: any, initArticleData: any) => {
   return {
     showDrawer,
     drawForm,
+    tableRef,
     handleEdit,
     handleRemove,
     handleRemoveMulti,

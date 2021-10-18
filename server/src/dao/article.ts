@@ -31,6 +31,9 @@ const articleDAO = {
   },
   removeArticle: async (id: number) => {
     return await articleRepository().delete(id);
+  },
+  removeArticleMulti: async (ids: number) => {
+    return await articleRepository().delete(ids);
   }
 }
 

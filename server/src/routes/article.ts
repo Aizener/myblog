@@ -101,6 +101,24 @@ router.put('/update', async(req: Request, res: Response, next: NextFunction) => 
   }
 })
 
+router.delete('/remove/multi', async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    const ids = req.body.ids;
+    const affected = await articleService.removeArticleMulti(ids).catch(err => {
+      throw { msg: err, code: ResponseCode.SERVICE_ERROR }
+    })
+    
+    res.json({
+      code: ResponseCode.SUCCESS,
+      msg: '文章删除成功',
+      data: ids,
+      affected: affected
+    })
+  } catch(err) {
+    handleErrorNext(err, next);
+  }
+})
+
 router.delete('/remove/:id', async(req: Request, res: Response, next: NextFunction) => {
   try {
     const id = Number(req.params.id);
@@ -115,10 +133,13 @@ router.delete('/remove/:id', async(req: Request, res: Response, next: NextFuncti
   
     res.json({
       code: ResponseCode.SUCCESS,
+      msg: '文章删除成功',
       data: req.params.id
     })
   } catch(err) {
     handleErrorNext(err, next);
   }
 })
+
+
 export default router;

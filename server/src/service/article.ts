@@ -21,6 +21,10 @@ const userService = {
   removeArticle: async (id: number) => {
     const res: DeleteResult = await articleDAO.removeArticle(id);
     return res.affected;
+  },
+  removeArticleMulti: async (ids: number) => {
+    const res: DeleteResult = await articleDAO.removeArticleMulti(ids);
+    return res.affected;
   }
 }
 

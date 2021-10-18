@@ -2,6 +2,7 @@
   <div class="article">
     <b-table
       type="article"
+      ref="tableRef"
       :data="tableData"
       :table-header="tableHeader"
       @add="showDrawer = true"
@@ -128,6 +129,7 @@ export default defineComponent({
       getTags,
       getCategory,
       showDrawer,
+      tableRef,
       drawForm,
       handleEdit,
       handleRemove,
@@ -138,6 +140,7 @@ export default defineComponent({
     return {
       ...toRefs(state),
       getTags,
+      tableRef,
       getCategory,
       qiniuPreview,
       showDrawer,
