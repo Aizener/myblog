@@ -34,7 +34,7 @@
       </template>
     </b-table>
     <el-pagination
-      class="page"
+      class="page flex flex-row-center"
       background
       layout="prev, pager, next"
       :page-size="seoForm.size"
@@ -159,8 +159,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .article {
   .page {
-    display: flex;
-    justify-content: center;
     padding-bottom: 30px;
   }
   .cover {
@@ -172,11 +170,6 @@ export default defineComponent({
       height: 100%;
       object-fit: cover;
     }
-  }
-  .line-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
   }
   .addedit {
     padding: 15px;

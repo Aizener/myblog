@@ -77,10 +77,6 @@ export default defineComponent({
     tableHeader: {
       type: Object,
       required: true
-    },
-    type: {
-      type: String,
-      required: true
     }
   },
   setup(props, { emit }) {
@@ -96,7 +92,7 @@ export default defineComponent({
           searchs.value[key] = { value: '', ...props.tableHeader[key] }
         }
       }
-    }, { deep: true })
+    }, { deep: true, immediate: true })
 
     const handleSearch = () => {
       const conditions: any = {}

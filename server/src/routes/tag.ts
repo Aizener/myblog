@@ -33,7 +33,7 @@ router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.post('/add', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/save', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const _tag = filterParams<Tag>(req.body, Tag);
     await checkParamsIsNull(_tag, ['title'])
@@ -50,6 +50,25 @@ router.post('/add', async (req: Request, res: Response, next: NextFunction) => {
     handleErrorNext(err, next);
   }
 });
+
+router.put('/save', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const _tag = filterParams<Tag>(req.body, Tag);
+    await checkParamsIsNull(_tag, ['title'])
+  
+    const tag = await tagService.addTag(_tag).catch(err => {
+      throw { msg: err, code: ResponseCode.SERVICE_ERROR }
+    });
+    
+    res.json({
+      code: 200,
+      data: tag
+    })
+  } catch(err: any) {
+    handleErrorNext(err, next);
+  }
+});
+
 
 router.put('/update', async(req: Request, res: Response, next: NextFunction) => {
   try {

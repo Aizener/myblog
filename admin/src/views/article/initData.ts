@@ -1,6 +1,6 @@
 import { getArticleList } from '@/utils/api/article';
 import { getCategory } from '@/utils/api/category';
-import { getTag } from '@/utils/api/tag';
+import { getTagList } from '@/utils/api/tag';
 import { getCurrentInstance, onBeforeMount } from 'vue';
 
 const initData = (state: any) => {
@@ -14,7 +14,7 @@ const initData = (state: any) => {
       })
       state.tableHeader.category.options = [{ value: 0, label: '全部' }].concat(state.articleForm.category.options);
     }
-    const tagRes: any = await getTag();
+    const tagRes: any = await getTagList();
     if (tagRes.code === 200) {
       state.articleForm.tags.options = tagRes.data.map((item: any) => {
         return { label: item.title, value: item.id }
