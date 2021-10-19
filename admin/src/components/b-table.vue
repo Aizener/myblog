@@ -1,14 +1,31 @@
 <template>
   <div class="b-table">
     <div class="b-table-header">
-      <el-input
-        size="small"
-        :placeholder="`请输入${item.label}`"
-        v-for="(item, idx) in inputs"
-        v-model="item.value"
+      <template
+        v-for="(item, idx) in searchs"
         :key="idx"
-      ></el-input>
-      <el-button type="primary" size="small" @click="handleSearch" v-if="Object.keys(inputs).length">搜索</el-button>
+      >
+        <el-input
+          size="small"
+          :placeholder="`请输入${item.label}`"
+          v-model="item.value"
+          v-if="item.type === 'input'"
+        ></el-input>
+        <el-select
+          size="small"
+          v-else-if="item.type === 'select'"
+          v-model="item.value"
+          :placeholder="`请选择${item.label}`"
+        >
+          <el-option
+            v-for="_item in item.options"
+            :key="_item.value"
+            :label="_item.label"
+            :value="_item.value"
+          ></el-option>
+        </el-select>
+      </template>
+      <el-button type="primary" size="small" @click="handleSearch" v-if="Object.keys(searchs).length">搜索</el-button>
       <el-button type="success" size="small" @click="$emit('add')">添加</el-button>
       <el-button type="danger" size="small" @click="handleRemove" :disabled="!ids.length">批量删除</el-button>
     </div>
@@ -49,7 +66,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, ref } from 'vue';
+import { defineComponent, toRefs, ref, watch } from 'vue';
 
 export default defineComponent({
   props: {
@@ -71,17 +88,20 @@ export default defineComponent({
       return props.tableHeader[key].search
     });
 
-    const inputs = ref<any>({});
-    for (const key in props.tableHeader) {
-      if (props.tableHeader[key].search) {
-        inputs.value[key] = { value: '', ...props.tableHeader[key] }
+    const searchs = ref<any>({});
+    
+    watch(() => props.tableHeader, () => {
+      for (const key in props.tableHeader) {
+        if (props.tableHeader[key].search) {
+          searchs.value[key] = { value: '', ...props.tableHeader[key] }
+        }
       }
-    }
+    }, { deep: true })
 
     const handleSearch = () => {
       const conditions: any = {}
-      for (const key in inputs.value) {
-        conditions[key] = inputs.value[key].value;
+      for (const key in searchs.value) {
+        conditions[key] = searchs.value[key].value;
       }
       
       emit('search', conditions);
@@ -96,7 +116,6 @@ export default defineComponent({
       ids.value = selection.map((item: any) => item.id);
     }
     const clearSelect = (_ids: Array<number>) => {
-      console.log(_ids);
       ids.value = _ids.filter((item: number) => !_ids.includes(item));
     }
 
@@ -106,7 +125,7 @@ export default defineComponent({
 
     return {
       ids,
-      inputs,
+      searchs,
       handleSearch,
       clearSelect,
       selectOne,

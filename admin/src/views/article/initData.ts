@@ -12,6 +12,7 @@ const initData = (state: any) => {
       state.articleForm.category.options = categoryRes.data.map((item: any) => {
         return { label: item.title, value: item.id }
       })
+      state.tableHeader.category.options = [{ value: 0, label: '全部' }].concat(state.articleForm.category.options);
     }
     const tagRes: any = await getTag();
     if (tagRes.code === 200) {

@@ -8,8 +8,8 @@ const userService = {
     return articleDAO.findArticleById(id);
   },
   find: async (conditions: any) => {
-    const { page, size, title, desc } = conditions;
-    return articleDAO.find(page, size, title, desc);
+    const { page, size, title, desc, category } = conditions;
+    return articleDAO.find(page, size, title, desc, category);
   },
   addArticle: async (article: Article) => {
     article.createTime = getCurrentDateTime();

@@ -92,14 +92,14 @@ export default defineComponent({
         tags: { required: true, trigger: 'change', message: '请选择标签' }
       },
       tableHeader: {
-        title: { label: '标题', width: '200px', search: true },
-        desc: { label: '描述', width: '350px', search: true },
+        title: { label: '标题', width: '200px', search: true, type: 'input' },
+        desc: { label: '描述', width: '350px', search: true, type: 'input' },
         cover: { label: '封面图', width: '160px' },
         view: { label: '浏览数', width: '80px'},
         good: { label: '点赞数', width: '80px'},
         message: { label: '留言数', width: '80px'},
-        category: { label: '分类', width: '160px', search: true },
-        tags: { label: '标签', width: '200px', search: true },
+        category: { label: '分类', width: '160px', search: true, type: 'select' },
+        tags: { label: '标签', width: '200px' },
         updateTime: { label: '修改时间', width: '120px' },
         createTime: { label: '创建时间', width: '120px' }
       },

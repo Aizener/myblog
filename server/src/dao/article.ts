@@ -8,7 +8,7 @@ const articleDAO = {
   findArticleById: async (id: number) => {
     return await articleRepository().findOne(id);
   },
-  find: async (page: number, size: number, title: string, desc: string) => {
+  find: async (page: number, size: number, title: string, desc: string, category: number) => {
     const conditions: any = {
       take: size,
       skip: (page - 1) * size,
@@ -17,6 +17,7 @@ const articleDAO = {
     }
     title && (conditions.where.title = Like(`%${title}`));
     desc && (conditions.where.desc = Like(`%${desc}`));
+    category > 0 && (conditions.where.category = category);
 
     return await articleRepository().findAndCount(conditions);
   },
