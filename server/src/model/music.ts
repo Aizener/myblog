@@ -17,6 +17,7 @@ class Music {
   @Column({
     type: 'varchar',
     length: 20,
+    nullable: true,
     comment: '作者'
   })
   author: string = ''
