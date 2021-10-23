@@ -48,12 +48,14 @@
               <el-upload
                 ref="uploadRef"
                 list-type="picture-card"
+                accept="image/*"
                 :action="qiniuUpload"
                 :data="qiniuData"
-                accept="image/*"
+                :auto-upload="false"
                 :multiple="false"
                 :limit="1"
                 :file-list="model.id ? model[idx + '_files'] : []"
+                :on-change="handleChange"
                 :on-remove="handleRemove(idx)"
                 :on-preview="handlePictureCardPreview"
                 :on-success="handleUploaded(idx)"
@@ -83,7 +85,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, getCurrentInstance, onBeforeMount, ref, toRefs, watch } from 'vue';
+import { defineComponent, getCurrentInstance, nextTick, onBeforeMount, ref, toRefs, watch } from 'vue';
 import MdEditor from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import { qiniuUpload, qiniuPreview } from '@/config/index';
@@ -120,20 +122,6 @@ export default defineComponent({
     const qiniuData = ref();
     const previewImage = ref();
 
-    onBeforeMount(async () => {
-      const res: any = await getQiniuToken();
-      if (res.code !== 200) {
-        proxy.$message.error({
-          type: 'error',
-          message: '获取七牛云Token失败，无法进行文件上传！'
-        })
-      } else {
-        qiniuData.value = {
-          token: res.data
-        }
-      }
-    })
-    
     // 自定义一份表单model数据
     const model = ref<any>({});
     watch(() => props.formData, () => {
@@ -182,6 +170,23 @@ export default defineComponent({
       model.value = {};
     }
 
+    // 选择图片
+    const handleChange = async () => {
+      const res: any = await getQiniuToken();
+      if (res.code !== 200) {
+        proxy.$message.error({
+          type: 'error',
+          message: '获取七牛云Token失败，无法进行文件上传！'
+        })
+      } else {
+        qiniuData.value = {
+          token: res.data
+        }
+        await nextTick();
+        uploadRef.value.submit();
+      }
+    }
+
     const dialogVisible = ref(false);
 
     return {
@@ -197,6 +202,7 @@ export default defineComponent({
       handleAdd,
       handlePictureCardPreview,
       handleRemove,
+      handleChange,
       handleUploaded
     }
   },

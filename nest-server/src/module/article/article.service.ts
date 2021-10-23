@@ -42,8 +42,7 @@ export class ArticleService {
   }
 
   async removeOne(id: number) {
-    const res =  await this.articleRepository.delete(id);
-    return res;
+    return  await this.articleRepository.delete(id);
   }
 
   async remove(ids: Array<number>) {

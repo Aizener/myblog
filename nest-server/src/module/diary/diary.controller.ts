@@ -1,15 +1,15 @@
 import { Bind, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, Req, Res } from '@nestjs/common';
-import { ArticleParam } from 'src/decorator/router/index';
+import { DiaryParam } from 'src/decorator/router';
 import { DeleteResult } from 'typeorm';
-import { ArticleService } from './article.service';
+import { DiaryService } from './diary.service';
 
-@Controller('article')
-export class ArticleController {
-  constructor(private readonly articleService: ArticleService) {}
+@Controller('diary')
+export class DiaryController {
+  constructor(private readonly diaryService: DiaryService) {}
 
   @Get('/list')
   async getArticleList(@Req() req, @Res() res) {
-    const [data, total]: any = await this.articleService.find(req.query);
+    const [data, total]: any = await this.diaryService.find(req.query);
     res.json({
       code: HttpStatus.OK,
       data: data,
@@ -18,29 +18,29 @@ export class ArticleController {
   }
 
   @Post('/save')
-  async addArticle(@ArticleParam() article, @Res() res) {
-    const ret = await this.articleService.save(article);
+  async addArticle(@DiaryParam() diary, @Res() res) {
+    const ret = await this.diaryService.save(diary);
     res.json({
       code: HttpStatus.OK,
       data: ret,
-      msg: '文章添加成功'
+      msg: '日志添加成功'
     })
   }
 
   @Put('/save')
-  async updateArticle(@ArticleParam() article, @Res() res) {
-    const ret = await this.articleService.save(article);
+  async updateArticle(@DiaryParam() diary, @Res() res) {
+    const ret = await this.diaryService.save(diary);
     res.json({
       code: HttpStatus.OK,
       data: ret,
-      msg: '文章修改成功'
+      msg: '日志修改成功'
     })
   }
 
   @Delete('/remove/:id')
   @Bind(Param('id'))
   async removeArticleOne(id, @Res() res) {
-    const ret: DeleteResult = await this.articleService.removeOne(id);
+    const ret: DeleteResult = await this.diaryService.removeOne(id);
     if (ret.affected > 0) {
       throw new HttpException('删除的文章已不存在', HttpStatus.OK);
     }
@@ -53,7 +53,7 @@ export class ArticleController {
   @Delete('/remove')
   async removeArticle(@Req() req, @Res() res) {
     const ids = req.body.ids;
-    const ret: DeleteResult = await this.articleService.remove(ids);
+    const ret: DeleteResult = await this.diaryService.remove(ids);
     res.json({
       code: HttpStatus.OK,
       data: ret

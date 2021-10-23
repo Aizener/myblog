@@ -1,6 +1,7 @@
 import { createParamDecorator, ExecutionContext, HttpException, HttpStatus } from '@nestjs/common';
 import Article from 'src/entity/article.entity';
 import Category from 'src/entity/category.entity';
+import Diary from 'src/entity/diary.entity';
 import Tag from 'src/entity/tag.entity';
 import User from 'src/entity/user.entity';
 import { getCurrentDateTime } from 'src/utils';
@@ -33,3 +34,16 @@ export const ArticleParam = createParamDecorator(
     return article;
   },
 );
+
+export const DiaryParam = createParamDecorator(
+  (data: unknown, ctx: ExecutionContext) => {
+    const req = ctx.switchToHttp().getRequest();
+    const body = req.body;
+    const diary = new Diary();
+    diary.desc = body.desc;
+    diary.cover = body.cover;
+    diary.content = body.contentn;
+    diary.createTime = getCurrentDateTime();
+    return diary;
+  }
+)

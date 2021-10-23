@@ -4,6 +4,7 @@
       ref="tableRef"
       :data="tableData"
       :table-header="tableHeader"
+      @add="showDrawer = true"
       @edit="handleEdit"
       @remove="handleRemove"
       @remove-multi="handleRemoveMulti"
@@ -37,7 +38,7 @@
       v-model="showDrawer"
       :form-data="articleForm"
       :form-rules="articleRules"
-      @confirm="hanndleConfirm"
+      @confirm="handleConfirm"
     ></b-drawer-form>
   </div>
 </template>
@@ -47,6 +48,8 @@ import { defineComponent, reactive, toRefs } from 'vue'
 import BTable from '@/components/b-table.vue';
 import BDrawerForm from '@/components/b-drawer-form.vue';
 import { qiniuPreview } from '@/config/index'
+import initData from './initData';
+import useForm from './useForm';
 
 export default defineComponent({
   components: {
@@ -55,18 +58,6 @@ export default defineComponent({
   },
   setup() {
     const state = reactive({
-      articleForm: {
-        title: { label: '标题', value: '', type: 'input' },
-        desc: { label: '描述', value: '', type: 'text' },
-        content: { label: '文章内容', value: '', type: 'md'  },
-        cover: { label: '封面图', value: '', type: 'file' }
-      },
-      articleRules: {
-        title: { required: true, trigger: 'blur', message: '请输入文章标题' },
-        desc: { required: true, trigger: 'blur', message: '请输入文章描述' },
-        content: { required: true, trigger: 'blur', message: '请输入文章内容' },
-        cover: { required: true, trigger: 'change', message: '请选择文章封面图' }
-      },
       tableHeader: {
         title: { label: '标题', width: '200px', search: true, type: 'input' },
         desc: { label: '描述', search: true, type: 'input' },
@@ -77,33 +68,32 @@ export default defineComponent({
         { title: 'aaa', desc: '是发送到发送到发送到发', cover: 'FiVwhpOvV7nh6p4xbD1VsEO_SHzY', createTime: '2012-12-12 24:23' },
         { title: 'aaa', desc: '是发送到发送到发送到发', cover: 'FiVwhpOvV7nh6p4xbD1VsEO_SHzY', createTime: '2012-12-12 24:23' },
         { title: 'aaa', desc: '是发送到发送到发送到发', cover: 'FiVwhpOvV7nh6p4xbD1VsEO_SHzY', createTime: '2012-12-12 24:23' }
-      ],
-      seoForm: {
-        page: 1,
-        size: 10
-      },
-      total: 0,
-      showDrawer: false,
+      ]
     })
 
-    const handleChangePage = () => {}
-    const handleEdit = () => {
-      state.showDrawer = true;
-    }
-    const handleRemove = () => {}
-    const handleRemoveMulti = () => {}
-    const handleSearch = () => {}
-    const hanndleConfirm = () => {}
+    initData(state);
 
-    return {
-      ...toRefs(state),
-      qiniuPreview,
+    const {
+      formState,
       handleChangePage,
       handleEdit,
       handleRemove,
       handleRemoveMulti,
       handleSearch,
-      hanndleConfirm
+      handleConfirm
+    } = useForm();
+
+    return {
+      ...toRefs(state),
+      ...toRefs(formState),
+      qiniuPreview,
+      handleChangePage,
+      formState,
+      handleEdit,
+      handleRemove,
+      handleRemoveMulti,
+      handleSearch,
+      handleConfirm
     }
   }
 })

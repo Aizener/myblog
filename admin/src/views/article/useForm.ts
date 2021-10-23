@@ -1,7 +1,29 @@
-import { getCurrentInstance, ref } from 'vue';
+import { getCurrentInstance, ref, reactive } from 'vue';
 import { addArticle, editArticle, removeArticle, removeArticleMulti } from '@/utils/api/article';
     
-const useForm = (state: any, initArticleData: any) => {
+const useForm = (initArticleData: any) => {
+  const formState = reactive<{
+    articleForm: any,
+    articleRules: any
+  }>({
+    articleForm: {
+      title: { label: '标题', value: '', type: 'input' },
+      desc: { label: '描述', value: '', type: 'text' },
+      content: { label: '文章内容', value: '', type: 'md'  },
+      cover: { label: '封面图', value: '', type: 'file' },
+      category: { label: '分类', value: undefined, type: 'select' },
+      tags: { label: '标签', value: [], type: 'select-multi' },
+    },
+    articleRules: {
+      title: { required: true, trigger: 'blur', message: '请输入文章标题' },
+      desc: { required: true, trigger: 'blur', message: '请输入文章描述' },
+      content: { required: true, trigger: 'blur', message: '请输入文章内容' },
+      cover: { required: true, trigger: 'change', message: '请选择文章封面图' },
+      category: { required: true, trigger: 'change', message: '请选择分类' },
+      tags: { required: true, trigger: 'change', message: '请选择标签' }
+    }
+  })
+
   const showDrawer = ref(false);
   const drawForm = ref();
   const tableRef = ref();
@@ -10,11 +32,11 @@ const useForm = (state: any, initArticleData: any) => {
 
   const handleEdit = (row: any) => {
     for (const key in row) {
-      if (state.articleForm[key]) {
-        state.articleForm[key].value = row[key];
+      if (formState.articleForm[key]) {
+        formState.articleForm[key].value = row[key];
       }
       if (key === 'id') {
-        state.articleForm[key] = { value: row[key] }
+        formState.articleForm[key] = { value: row[key] }
       }
     }
     showDrawer.value = true;
@@ -82,22 +104,23 @@ const useForm = (state: any, initArticleData: any) => {
   }
 
   const getTags = (tags: any) => {
-    if (!state.articleForm.tags.options) {
+    if (!formState.articleForm.tags.options) {
       return;
     }
-    const filterTags = state.articleForm.tags.options.filter((item: any) => tags.includes(item.value));
+    const filterTags = formState.articleForm.tags.options.filter((item: any) => tags.includes(item.value));
     return filterTags.map((item: any) => item.label);
   }
 
-  const getCategory = (category: number) => {
-    if (!state.articleForm.category.options) {
+  const getCategories = (category: number) => {
+    if (!formState.articleForm.category.options) {
       return;
     }
-    const _category: any = state.articleForm.category.options.find((item: any) => item.value === category);
+    const _category: any = formState.articleForm.category.options.find((item: any) => item.value === category);
     return _category.label;
   }
 
   return {
+    formState,
     showDrawer,
     drawForm,
     tableRef,
@@ -106,7 +129,7 @@ const useForm = (state: any, initArticleData: any) => {
     handleRemoveMulti,
     hanndleConfirm,
     getTags,
-    getCategory
+    getCategories
   }
 }
 

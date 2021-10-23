@@ -7,6 +7,7 @@ import { ArticleModule } from './module/article/article.module';
 import { CategoryModule } from './module/category/category.module';
 import { UploadModule } from './module/upload/upload.module';
 import { TagModule } from './module/tag/tag.module';
+import { DiaryModule } from './module/diary/diary.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { TagModule } from './module/tag/tag.module';
     CategoryModule,
     UploadModule,
     TagModule,
+    DiaryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
