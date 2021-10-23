@@ -2,7 +2,7 @@ import { ArticleType } from '@/config/type';
 import request from '../request'
 
 export const getArticleList = (params: any) => {
-  return request.get('/article', { params });
+  return request.get('/article/list', { params });
 }
 
 export const addArticle = (form: any) => {

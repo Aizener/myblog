@@ -1,5 +1,5 @@
 import request from '../request'
 
 export const getCategory = () => {
-  return request.get('/category');
+  return request.get('/category/list');
 }

@@ -1,7 +1,7 @@
 import request from '../request'
 
 export const getTagList = () => {
-  return request.get('/tag');
+  return request.get('/tag/list');
 }
 
 export const addTag = (form: any) => {
