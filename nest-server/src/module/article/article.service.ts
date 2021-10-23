@@ -29,4 +29,8 @@ export class ArticleService {
 
     return await this.articleRepository.findAndCount(conditions);
   }
+
+  async save(article: Article) {
+    return await this.articleRepository.save(article);
+  }
 }

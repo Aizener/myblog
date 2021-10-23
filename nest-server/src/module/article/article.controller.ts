@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Req, Res } from '@nestjs/common';
-import { User } from 'src/decorator/router/index';
+import { ArticleParam } from 'src/decorator/router/index';
 import { ArticleService } from './article.service';
 
 @Controller('article')
@@ -7,8 +7,7 @@ export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
   @Get('/list')
-  async getArticleList(@User() user, @Res() res) {
-    console.log(user);
+  async getArticleList(@Req() req, @Res() res) {
     const ret = await this.articleService.find(1, 10);
     res.json({
       code: 200,
@@ -17,11 +16,12 @@ export class ArticleController {
   }
 
   @Post('/save')
-  async addArticle(@Req() req, @Res() res) {
-    console.log(req.body, req.params);
+  async addArticle(@ArticleParam() article, @Res() res) {
+    const ret = await this.articleService.save(article);
     res.json({
       code: 200,
-      data: req.body
+      data: ret,
+      msg: '文章添加成功'
     })
   }
 }

@@ -87,7 +87,7 @@ class Article {
     type: 'int',
     comment: '用户ID',
   })
-  user: User = new User();
+  user: User;
 
   @ManyToOne(() => Category, (category) => category.articles)
   @Column({
