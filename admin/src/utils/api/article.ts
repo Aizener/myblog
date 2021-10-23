@@ -18,7 +18,7 @@ export const removeArticle = (id: number) => {
 }
 
 export const removeArticleMulti = (ids: Array<number>) => {
-  return request.delete(`/article/remove/multi`, {
+  return request.delete(`/article/remove`, {
     data: {
       ids
     }

@@ -5,6 +5,7 @@ import { getCurrentDateTime } from 'src/utils';
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
+    console.log(exception)
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
@@ -12,6 +13,9 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       code = exception.getStatus();
       msg = exception.message;
+    } else {
+      code = HttpStatus.INTERNAL_SERVER_ERROR,
+      msg = exception.toString();
     }
 
     response

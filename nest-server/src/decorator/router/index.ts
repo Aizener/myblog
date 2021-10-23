@@ -10,6 +10,9 @@ export const ArticleParam = createParamDecorator(
     const req = ctx.switchToHttp().getRequest();
     const body = req.body;
     const article = new Article();
+    if (body.id) {
+      article.id = body.id;
+    }
     article.title = body.title;
     article.desc = body.desc;
     article.cover = body.cover;

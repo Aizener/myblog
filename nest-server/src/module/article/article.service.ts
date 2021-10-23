@@ -10,13 +10,19 @@ export class ArticleService {
     private readonly articleRepository: Repository<Article>
   ) {}
 
-  async find(
+  async find({
+    page,
+    size,
+    title,
+    desc,
+    category,
+  }: {
     page: number,
     size: number,
     title?: string,
     desc?: string,
     category?: number,
-  ) {
+  }) {
     const conditions: any = {
       take: size,
       skip: (page - 1) * size,
@@ -27,10 +33,20 @@ export class ArticleService {
     desc && (conditions.where.desc = Like(`%${desc}`));
     category > 0 && (conditions.where.category = category);
 
-    return await this.articleRepository.findAndCount(conditions);
+    const [res, total]: any = await this.articleRepository.findAndCount(conditions);
+    return [res, total];
   }
 
   async save(article: Article) {
     return await this.articleRepository.save(article);
+  }
+
+  async removeOne(id: number) {
+    const res =  await this.articleRepository.delete(id);
+    return res;
+  }
+
+  async remove(ids: Array<number>) {
+    return await this.articleRepository.delete(ids);
   }
 }
