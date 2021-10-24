@@ -1,14 +1,15 @@
 import { Bind, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, Req, Res } from '@nestjs/common';
-import { TagParam } from 'src/decorator/router';
+import { MusicParam } from 'src/decorator/router';
 import { DeleteResult } from 'typeorm';
-import { TagService } from './tag.service';
-@Controller('tag')
-export class TagController {
-  constructor(private readonly tagService: TagService) {}
+import { MusicService } from './music.service';
+
+@Controller('music')
+export class MusicController {
+  constructor(private readonly musicService: MusicService) {}
 
   @Get('/list')
-  async getTagList(@Req() req, @Res() res) {
-    const [data, total]: any = await this.tagService.find(req.query);
+  async getMusicList(@Req() req, @Res() res) {
+    const [data, total]: any = await this.musicService.find(req.query);
     res.json({
       code: 200,
       data: data,
@@ -17,8 +18,8 @@ export class TagController {
   }
 
   @Post('/save')
-  async addArticle(@TagParam() diary, @Res() res) {
-    const ret = await this.tagService.save(diary);
+  async addArticle(@MusicParam() diary, @Res() res) {
+    const ret = await this.musicService.save(diary);
     res.json({
       code: HttpStatus.OK,
       data: ret,
@@ -27,8 +28,8 @@ export class TagController {
   }
 
   @Put('/save')
-  async updateArticle(@TagParam() diary, @Res() res) {
-    const ret = await this.tagService.save(diary);
+  async updateArticle(@MusicParam() diary, @Res() res) {
+    const ret = await this.musicService.save(diary);
     res.json({
       code: HttpStatus.OK,
       data: ret,
@@ -39,7 +40,7 @@ export class TagController {
   @Delete('/remove/:id')
   @Bind(Param('id'))
   async removeArticleOne(id, @Res() res) {
-    const ret: DeleteResult = await this.tagService.removeOne(id);
+    const ret: DeleteResult = await this.musicService.removeOne(id);
     if (ret.affected === 0) {
       throw new HttpException('删除的标签已不存在', HttpStatus.OK);
     }
@@ -53,7 +54,7 @@ export class TagController {
   @Delete('/remove')
   async removeArticle(@Req() req, @Res() res) {
     const ids = req.body.ids;
-    const ret: DeleteResult = await this.tagService.remove(ids);
+    const ret: DeleteResult = await this.musicService.remove(ids);
     if (ret.affected === 0) {
       throw new HttpException('删除的标签已不存在', HttpStatus.OK);
     }

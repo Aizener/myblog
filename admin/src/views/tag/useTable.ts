@@ -1,4 +1,4 @@
-import { getCategoryList, removeCategory, removeCategoryMulti } from '@/utils/api/category';
+import { getTagList, removeTag, removeTagMulti } from '@/utils/api/tag';
 import { ref, reactive, getCurrentInstance } from 'vue';
 
 const useTable = () => {
@@ -24,7 +24,7 @@ const useTable = () => {
   const tableRef = ref();
 
   const initData = async () => {
-    const res: any = await getCategoryList(tableState.seoForm);
+    const res: any = await getTagList(tableState.seoForm);
     if (res.code === 200) {
       tableState.tableData = res.data;
     } else {
@@ -42,12 +42,12 @@ const useTable = () => {
     initData();
   }
   const handleRemove = async (row: any) => {
-    await proxy.$confirm('确定要删除这篇分类吗?', {
+    await proxy.$confirm('确定要删除这篇标签吗?', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
     });
-    const res: any = await removeCategory(row.id);
+    const res: any = await removeTag(row.id);
     if (res.code === 200) {
       proxy.$message.success({
         message: res.msg
@@ -62,12 +62,12 @@ const useTable = () => {
   }
 
   const handleRemoveMulti = async (ids: Array<number>) => {
-    await proxy.$confirm('确定要删除这些分类吗?', {
+    await proxy.$confirm('确定要删除这些标签吗?', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
     });
-    const res: any = await removeCategoryMulti(ids);
+    const res: any = await removeTagMulti(ids);
     if (res.code === 200) {
       proxy.$message.success({
         message: res.msg

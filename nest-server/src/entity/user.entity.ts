@@ -15,7 +15,7 @@ class User {
 
   @Column({
     type: 'varchar',
-    length: 20,
+    length: 50,
     comment: '密码',
   })
   password = '';

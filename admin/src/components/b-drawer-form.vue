@@ -19,6 +19,9 @@
             <template v-if="item.type === 'input'">
               <el-input v-model="model[idx]" :placeholder="`请输入${item.label}`"></el-input>
             </template>
+            <template v-if="item.type === 'password'">
+              <el-input v-model="model[idx]" :placeholder="`请输入${item.label}`" type="password" maxlength="20"></el-input>
+            </template>
             <template v-else-if="item.type === 'text'">
               <el-input v-model="model[idx]" type="textarea" :rows="3" :placeholder="`请输入${item.label}`"></el-input>
             </template>

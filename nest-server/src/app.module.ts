@@ -8,6 +8,7 @@ import { CategoryModule } from './module/category/category.module';
 import { UploadModule } from './module/upload/upload.module';
 import { TagModule } from './module/tag/tag.module';
 import { DiaryModule } from './module/diary/diary.module';
+import { MusicModule } from './module/music/music.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { DiaryModule } from './module/diary/diary.module';
     UploadModule,
     TagModule,
     DiaryModule,
+    MusicModule,
   ],
   controllers: [AppController],
   providers: [AppService],

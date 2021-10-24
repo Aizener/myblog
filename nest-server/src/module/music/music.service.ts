@@ -1,25 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import Tag from 'src/entity/tag.entity';
+import Music from 'src/entity/music.entity';
 import { Like, Repository } from 'typeorm';
 
 @Injectable()
-export class TagService {
+export class MusicService {
   constructor(
-    @InjectRepository(Tag)
-    private readonly tagRepository: Repository<Tag>
+    @InjectRepository(Music)
+    private readonly musicRepository: Repository<Music>
   ) {}
   
   async find({
     page,
     size,
     title,
-    desc
+    author
   }: {
     page: number,
     size: number,
     title?: string,
-    desc?: string
+    author?: string
   }) {
     const conditions: any = {
       take: size,
@@ -27,22 +27,22 @@ export class TagService {
       where: {}
     };
     title && (conditions.where.title = Like(`%${title}%`));
-    desc && (conditions.where.desc = Like(`%${desc}%`));
+    author && (conditions.where.author = Like(`%${author}%`));
 
-    const [res, total]: any = await this.tagRepository.findAndCount(conditions);
+    const [res, total]: any = await this.musicRepository.findAndCount(conditions);
     return [res, total];
   }
 
-  async save(tag: Tag) {
-    return await this.tagRepository.save(tag);
+  async save(music: Music) {
+    return await this.musicRepository.save(music);
   }
 
   async removeOne(id: number) {
-    const res =  await this.tagRepository.delete(id);
+    const res =  await this.musicRepository.delete(id);
     return res;
   }
 
   async remove(ids: Array<number>) {
-    return await this.tagRepository.delete(ids);
+    return await this.musicRepository.delete(ids);
   }
 }
