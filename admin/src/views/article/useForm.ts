@@ -1,7 +1,7 @@
 import { getCurrentInstance, ref, reactive } from 'vue';
 import { addArticle, editArticle, removeArticle, removeArticleMulti } from '@/utils/api/article';
     
-const useForm = (initArticleData: any) => {
+const useForm = (initData: Function) => {
   const formState = reactive<{
     articleForm: any,
     articleRules: any
@@ -26,7 +26,6 @@ const useForm = (initArticleData: any) => {
 
   const showDrawer = ref(false);
   const drawForm = ref();
-  const tableRef = ref();
 
   const { proxy }: any = getCurrentInstance();
 
@@ -42,46 +41,6 @@ const useForm = (initArticleData: any) => {
     showDrawer.value = true;
   }
 
-  const handleRemove = async (row: any) => {
-    await proxy.$confirm('确定要删除这篇文章吗?', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    });
-    const res: any = await removeArticle(row.id);
-    if (res.code === 200) {
-      proxy.$message.success({
-        message: res.msg
-      })
-      initArticleData();
-      tableRef.value.clearSelect([row.id]);
-    } else {
-      proxy.$message.error({
-        message: res.msg
-      })
-    }
-  }
-
-  const handleRemoveMulti = async (ids: Array<number>) => {
-    await proxy.$confirm('确定要删除这些文章吗?', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    });
-    const res: any = await removeArticleMulti(ids);
-    if (res.code === 200) {
-      proxy.$message.success({
-        message: res.msg
-      })
-      initArticleData();
-      tableRef.value.clearSelect(ids);
-    } else {
-      proxy.$message.error({
-        message: res.msg
-      })
-    }
-  }
-
   const hanndleConfirm = async (model: any) => {
     let res: any = null;
     if (model.id) {
@@ -93,7 +52,7 @@ const useForm = (initArticleData: any) => {
       proxy.$message.success({
         message: res.msg
       })
-      initArticleData();
+      initData();
       drawForm.value.resetForm();
       showDrawer.value = false;
     } else {
@@ -123,10 +82,7 @@ const useForm = (initArticleData: any) => {
     formState,
     showDrawer,
     drawForm,
-    tableRef,
     handleEdit,
-    handleRemove,
-    handleRemoveMulti,
     hanndleConfirm,
     getTags,
     getCategories

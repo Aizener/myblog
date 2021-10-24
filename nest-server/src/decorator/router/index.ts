@@ -40,10 +40,28 @@ export const DiaryParam = createParamDecorator(
     const req = ctx.switchToHttp().getRequest();
     const body = req.body;
     const diary = new Diary();
+    if (body.id) {
+      diary.id = body.id;
+    }
     diary.desc = body.desc;
     diary.cover = body.cover;
-    diary.content = body.contentn;
+    diary.content = body.content;
     diary.createTime = getCurrentDateTime();
     return diary;
+  }
+)
+
+export const CategoryParam = createParamDecorator(
+  (data: unknown, ctx: ExecutionContext) => {
+    const req = ctx.switchToHttp().getRequest();
+    const body = req.body;
+    const category = new Category();
+    if (body.id) {
+      category.id = body.id;
+    }
+    category.title = body.title;
+    category.parentId = 0;
+    category.createTime = getCurrentDateTime();
+    return category;
   }
 )

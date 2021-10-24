@@ -41,12 +41,13 @@ export class DiaryController {
   @Bind(Param('id'))
   async removeArticleOne(id, @Res() res) {
     const ret: DeleteResult = await this.diaryService.removeOne(id);
-    if (ret.affected > 0) {
-      throw new HttpException('删除的文章已不存在', HttpStatus.OK);
+    if (ret.affected === 0) {
+      throw new HttpException('删除的日志已不存在', HttpStatus.OK);
     }
     res.json({
       code: HttpStatus.OK,
-      data: ret
+      data: ret,
+      msg: '日志删除成功'
     })
   }
 
@@ -54,9 +55,13 @@ export class DiaryController {
   async removeArticle(@Req() req, @Res() res) {
     const ids = req.body.ids;
     const ret: DeleteResult = await this.diaryService.remove(ids);
+    if (ret.affected === 0) {
+      throw new HttpException('删除的日志已不存在', HttpStatus.OK);
+    }
     res.json({
       code: HttpStatus.OK,
-      data: ret
+      data: ret,
+      msg: '日志删除成功'
     })
   }
 }

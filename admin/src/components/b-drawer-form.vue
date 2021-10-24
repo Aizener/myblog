@@ -77,7 +77,7 @@
       </el-form>
 
       <div class="operate">
-        <el-button type="primary" @click="handleAdd">添加</el-button>
+        <el-button type="primary" @click="handleAdd">提交</el-button>
         <el-button type="info" @click="$emit('update:modelValue', false)">取消</el-button>
       </div>
     </el-drawer>
@@ -165,7 +165,7 @@ export default defineComponent({
 
     // 清空表单
     const resetForm = () => {
-      uploadRef.value.clearFiles();
+      uploadRef.value && uploadRef.value.clearFiles();
       formRef.value.resetFields();
       model.value = {};
     }

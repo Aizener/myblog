@@ -34,17 +34,17 @@
     ></el-pagination>
     <b-drawer-form
       ref="drawForm"
-      title="日志添加"
+      title="日志管理"
       v-model="showDrawer"
-      :form-data="articleForm"
-      :form-rules="articleRules"
+      :form-data="diaryForm"
+      :form-rules="diaryRules"
       @confirm="handleConfirm"
     ></b-drawer-form>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue'
+import { defineComponent, toRefs } from 'vue'
 import BTable from '@/components/b-table.vue';
 import BDrawerForm from '@/components/b-drawer-form.vue';
 import { qiniuPreview } from '@/config/index'
@@ -58,25 +58,29 @@ export default defineComponent({
   },
   setup() {
     const {
-      tableState
+      tableState,
+      tableRef,
+      initData,
+      handleSearch,
+      handleRemove,
+      handleRemoveMulti,
     } = useTable();
 
     const {
       formState,
+      drawForm,
       handleChangePage,
       handleEdit,
-      handleRemove,
-      handleRemoveMulti,
-      handleSearch,
       handleConfirm
-    } = useForm();
+    } = useForm(initData);
 
     return {
       ...toRefs(tableState),
       ...toRefs(formState),
       qiniuPreview,
+      tableRef,
+      drawForm,
       handleChangePage,
-      formState,
       handleEdit,
       handleRemove,
       handleRemoveMulti,
@@ -90,5 +94,15 @@ export default defineComponent({
 <style lang="scss" scoped>
 .page {
   padding-bottom: 30px;
+}
+.cover {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;;
+  & ::v-deep .el-image__inner {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 </style>

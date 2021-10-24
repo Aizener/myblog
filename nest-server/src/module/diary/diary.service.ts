@@ -26,8 +26,8 @@ export class DiaryService {
       skip: (page - 1) * size,
       where: {}
     };
-    title && (conditions.where.title = Like(`%${title}`));
-    desc && (conditions.where.desc = Like(`%${desc}`));
+    title && (conditions.where.title = Like(`%${title}%`));
+    desc && (conditions.where.desc = Like(`%${desc}%`));
 
     const [res, total]: any = await this.diaryRepository.findAndCount(conditions);
     return [res, total];

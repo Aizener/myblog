@@ -29,8 +29,8 @@ export class ArticleService {
       where: {},
       relations: ['category', 'tags'],
     };
-    title && (conditions.where.title = Like(`%${title}`));
-    desc && (conditions.where.desc = Like(`%${desc}`));
+    title && (conditions.where.title = Like(`%${title}%`));
+    desc && (conditions.where.desc = Like(`%${desc}%`));
     category > 0 && (conditions.where.category = category);
 
     const [res, total]: any = await this.articleRepository.findAndCount(conditions);

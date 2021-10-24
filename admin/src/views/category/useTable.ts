@@ -1,5 +1,5 @@
-import { getDiaryList, removeDiary, removeDiaryMulti } from '@/utils/api/diary';
-import { getCurrentInstance, reactive, ref } from 'vue';
+import { getCategoryList, removeCategory, removeCategoryMulti } from '@/utils/api/category';
+import { ref, reactive, getCurrentInstance } from 'vue';
 
 const useTable = () => {
   const tableState = reactive<{
@@ -9,8 +9,7 @@ const useTable = () => {
     total: number
   }>({
     tableHeader: {
-      desc: { label: '描述', search: true, type: 'input' },
-      cover: { label: '封面图', width: '160px' },
+      title: { label: '名称', search: true, type: 'input' },
       createTime: { label: '创建时间', width: '200px' }
     },
     tableData: [],
@@ -25,7 +24,7 @@ const useTable = () => {
   const tableRef = ref();
 
   const initData = async () => {
-    const res: any = await getDiaryList(tableState.seoForm);
+    const res: any = await getCategoryList(tableState.seoForm);
     if (res.code === 200) {
       tableState.tableData = res.data;
     } else {
@@ -48,7 +47,7 @@ const useTable = () => {
       cancelButtonText: '取消',
       type: 'warning'
     });
-    const res: any = await removeDiary(row.id);
+    const res: any = await removeCategory(row.id);
     if (res.code === 200) {
       proxy.$message.success({
         message: res.msg
@@ -68,7 +67,7 @@ const useTable = () => {
       cancelButtonText: '取消',
       type: 'warning'
     });
-    const res: any = await removeDiaryMulti(ids);
+    const res: any = await removeCategoryMulti(ids);
     if (res.code === 200) {
       proxy.$message.success({
         message: res.msg
@@ -95,3 +94,4 @@ const useTable = () => {
 }
 
 export default useTable;
+

@@ -1,21 +1,17 @@
-import { addDiary, editDiary } from '@/utils/api/diary';
+import { addCategory, editCategory } from '@/utils/api/category';
 import { getCurrentInstance, reactive, ref } from 'vue';
 
 const useForm = (initData: Function) => {
   const formState = reactive<{
-    diaryForm: any,
-    diaryRules: any,
+    categoryForm: any,
+    categoryRules: any,
     showDrawer: boolean
   }>({
-    diaryForm: {
-      desc: { label: '描述', value: '', type: 'text' },
-      content: { label: '文章内容', value: '', type: 'md'  },
-      cover: { label: '封面图', value: '', type: 'file' }
+    categoryForm: {
+      title: { label: '名称', value: '', type: 'text' },
     },
-    diaryRules: {
-      desc: { required: true, trigger: 'blur', message: '请输入文章描述' },
-      content: { required: true, trigger: 'blur', message: '请输入文章内容' },
-      cover: { required: true, trigger: 'change', message: '请选择文章封面图' }
+    categoryRules: {
+      title: { required: true, trigger: 'blur', message: '请输入文章描述' },
     },
     showDrawer: false
   })
@@ -26,11 +22,11 @@ const useForm = (initData: Function) => {
   const handleChangePage = () => {}
   const handleEdit = (row: any) => {
     for (const key in row) {
-      if (formState.diaryForm[key]) {
-        formState.diaryForm[key].value = row[key];
+      if (formState.categoryForm[key]) {
+        formState.categoryForm[key].value = row[key];
       }
       if (key === 'id') {
-        formState.diaryForm[key] = { value: row[key] }
+        formState.categoryForm[key] = { value: row[key] }
       }
     }
     formState.showDrawer = true;
@@ -38,9 +34,9 @@ const useForm = (initData: Function) => {
   const handleConfirm = async (form: any) => {
     let res: any;
     if (form.id) {
-      res = await editDiary(form);
+      res = await editCategory(form);
     } else {
-      res = await addDiary(form);
+      res = await addCategory(form);
     }
     if (res.code === 200) {
       proxy.$message.success({

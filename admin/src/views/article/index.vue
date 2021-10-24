@@ -43,7 +43,7 @@
     ></el-pagination>
     <b-drawer-form
       ref="drawForm"
-      title="文章添加"
+      title="文章管理"
       v-model="showDrawer"
       :form-data="articleForm"
       :form-rules="articleRules"
@@ -60,7 +60,7 @@ import { qiniuPreview } from '@/config/index';
 import useForm from './useForm';
 import useTable from './useTable';
 import { getTagList } from '@/utils/api/tag';
-import { getCategory } from '@/utils/api/category';
+import { getCategoryList } from '@/utils/api/category';
 
 export default defineComponent({
   components: {
@@ -70,8 +70,11 @@ export default defineComponent({
   setup(props) {
     const {
       tableState,
-      initArticleData,
+      initData,
       handleChangePage,
+      handleRemove,
+      handleRemoveMulti,
+      tableRef,
       handleSearch
     } = useTable();
     
@@ -80,16 +83,13 @@ export default defineComponent({
       getTags,
       getCategories,
       showDrawer,
-      tableRef,
       drawForm,
       handleEdit,
-      handleRemove,
-      handleRemoveMulti,
       hanndleConfirm
-    } = useForm(initArticleData);
+    } = useForm(initData);
 
     onBeforeMount(async () => {
-      const categoryRes: any = await getCategory();
+      const categoryRes: any = await getCategoryList();
       if (categoryRes.code === 200) {
         formState.articleForm.category.options = categoryRes.data.map((item: any) => {
           return { label: item.title, value: item.id }

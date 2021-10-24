@@ -1,5 +1,5 @@
-import { getArticleList } from '@/utils/api/article';
-import { reactive, getCurrentInstance } from 'vue'
+import { getArticleList, removeArticle, removeArticleMulti } from '@/utils/api/article';
+import { reactive, getCurrentInstance, ref } from 'vue'
 
 const useTable = () => {
   const tableState = reactive<{
@@ -29,10 +29,11 @@ const useTable = () => {
   });
 
   const { proxy }: any = getCurrentInstance();
+  const tableRef = ref();
 
   const handleChangePage = (page: number) => {
     tableState.seoForm.page = page;
-    initArticleData();
+    initData();
   }
 
   const handleSearch = (conditions: any) => {
@@ -40,10 +41,50 @@ const useTable = () => {
     for (const key in conditions) {
       tableState.seoForm[key] = conditions[key];
     }
-    initArticleData();
+    initData();
   }
 
-  const initArticleData = async () => {
+  const handleRemove = async (row: any) => {
+    await proxy.$confirm('确定要删除这篇文章吗?', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    });
+    const res: any = await removeArticle(row.id);
+    if (res.code === 200) {
+      proxy.$message.success({
+        message: res.msg
+      })
+      initData();
+      tableRef.value.clearSelect([row.id]);
+    } else {
+      proxy.$message.error({
+        message: res.msg
+      })
+    }
+  }
+
+  const handleRemoveMulti = async (ids: Array<number>) => {
+    await proxy.$confirm('确定要删除这些文章吗?', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    });
+    const res: any = await removeArticleMulti(ids);
+    if (res.code === 200) {
+      proxy.$message.success({
+        message: res.msg
+      })
+      initData();
+      tableRef.value.clearSelect(ids);
+    } else {
+      proxy.$message.error({
+        message: res.msg
+      })
+    }
+  }
+
+  const initData = async () => {
     const articleRes: any = await getArticleList(tableState.seoForm);
     if (articleRes.code === 200) {
       tableState.tableData = articleRes.data.map((item: any) => {
@@ -61,13 +102,16 @@ const useTable = () => {
       })
     }
   }
-  initArticleData();
+  initData();
 
   return {
     tableState,
-    initArticleData,
+    tableRef,
+    initData,
     handleChangePage,
-    handleSearch
+    handleSearch,
+    handleRemove,
+    handleRemoveMulti,
   }
 }
 
