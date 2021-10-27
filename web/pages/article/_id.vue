@@ -1,12 +1,23 @@
 <template>
-  <div class="article-detail">
-    <h3 class="article-title">这是文章的标题，可能会比较的长哦这是文章的标题，可能会比较的长哦</h3>
-    <div class="article-info">
-      <p class="time time1">发布时间：2021-10-25 21:46</p>
-      <p class="time time2">最近更新：2021-10-25 21:46</p>
+  <div class="article">
+    <div class="article-detail">
+      <h3 class="article-title">这是文章的标题，可能会比较的长哦这是文章的标题，可能会比较的长哦</h3>
+      <div class="article-info flex flex-row-between">
+        <div class="flex">
+          <p class="time time1">发布时间：2021-10-25 21:46</p>
+          <p class="time time2">最近更新：2021-10-25 21:46</p>
+        </div>
+        <p class="time ml-30">浏览：333</p>
+      </div>
+      <div class="article-content" @scroll="onScroll" :class="getClass">
+        {{ '撒的发生的快递费静安寺克劳福德静安寺'.repeat(100) }}
+      </div>
     </div>
-    <div class="article-content" @scroll="onScroll" :class="getClass">
-      {{ '撒的发生的快递费静安寺克劳福德静安寺'.repeat(100) }}
+
+    <div class="article-operate mt-15 flex flex-row-end">
+      <div class="item">
+        <b-tool title="11" icon-name="icon-good"></b-tool>
+      </div>
     </div>
   </div>
 </template>
@@ -55,12 +66,13 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .article {
   &-detail {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 200px);
+    min-height: 720px;
+    height: calc(100vh - 291px);
     overflow: hidden;
     background-color: #fff;
     border-radius: 5px;
@@ -97,6 +109,12 @@ export default Vue.extend({
     }
     &.bottom {
       box-shadow: 0 0 0 0 inset $color, 0 -5px 5px -3px inset $color;
+    }
+  }
+  &-operate {
+    border-radius: 5px;
+    .item {
+      width: 70px;
     }
   }
 }

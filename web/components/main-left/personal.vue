@@ -88,6 +88,7 @@ export default {
 
   .doc-wrapper {
     .doc {
+      box-shadow: 3px 3px 5px #999;
       &:nth-child(1) {
         background-color: tomato;
       }
@@ -98,7 +99,7 @@ export default {
         background-color: green;
       }
       &:hover {
-        box-shadow: 0 0 5px #666;
+        box-shadow: 3px 3px 5px inset #666;
         cursor: pointer;
       }
     }
