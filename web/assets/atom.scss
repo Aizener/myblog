@@ -88,13 +88,13 @@ $colorName: '000', '333', '666', '999', 'ccc', 'ddd', 'eee', 'fff', 'gray', '0ff
 .hover-shadow {
   box-shadow: 3px 3px 5px #999;
   &:hover {
-    box-shadow: 3px 3px 5px inset #666;
+    box-shadow: 3px 3px 5px inset #555;
   }
 }
 
 .active-shadow {
   box-shadow: 3px 3px 5px #999;
   &:active {
-    box-shadow: 3px 3px 5px inset #666;
+    box-shadow: 3px 3px 5px inset #555;
   }
 }

@@ -8,19 +8,19 @@
       <div class="list">
         <p class="item fs-13 color-999 p-10">
           阿斯加德福利卡时间段里看风景sad
-          <nuxt-link class="color-0ff" to="">详情>></nuxt-link>
+          <nuxt-link class="color-0ff" to="/article/1">详情>></nuxt-link>
         </p>
         <p class="item fs-13 color-999 p-10">
           阿斯加德福利卡时间段里看风景sad
-          <nuxt-link class="color-0ff" to="">详情>></nuxt-link>
+          <nuxt-link class="color-0ff" to="/article/1">详情>></nuxt-link>
         </p>
         <p class="item fs-13 color-999 p-10">
           阿斯加德福利卡时间段里看风景sad
-          <nuxt-link class="color-0ff" to="">详情>></nuxt-link>
+          <nuxt-link class="color-0ff" to="/article/1">详情>></nuxt-link>
         </p>
       </div>
       <div class="flex flex-row-center flex-col-center py-10">
-        <nuxt-link class="fs-14 ml-5 color-666 hover-underline" to="">更多公告</nuxt-link>
+        <nuxt-link class="fs-14 ml-5 color-666 hover-underline" to="/board">更多公告</nuxt-link>
       </div>
     </div>
   </div>
@@ -45,9 +45,12 @@ export default {
     .list {
       .item {
         border-bottom: 1px dashed #ccc;
+        display: flex;
+        flex-direction: column;
       }
       a {
         text-decoration: underline;
+        align-self: flex-end;
       }
     }
   }

@@ -52,16 +52,16 @@ export default Vue.extend({
   },
   methods: {
     onScroll(e: any) {
-      (this as any).handleArticleScrollEvent(e);
+      // (this as any).handleArticleScrollEvent(e);
     }
   },
   mounted() {
-    (this as any).handleArticleScrollEvent = throttle((e: any) => {
-      const target = e.target;
-      this.articleScrollHeight = target.scrollHeight;
-      this.articleTop = target.scrollTop;
-      this.articleHeight = target.offsetHeight;
-    });
+    // (this as any).handleArticleScrollEvent = throttle((e: any) => {
+    //   const target = e.target;
+    //   this.articleScrollHeight = target.scrollHeight;
+    //   this.articleTop = target.scrollTop;
+    //   this.articleHeight = target.offsetHeight;
+    // });
   }
 });
 </script>
@@ -71,8 +71,7 @@ export default Vue.extend({
   &-detail {
     display: flex;
     flex-direction: column;
-    min-height: 720px;
-    height: calc(100vh - 291px);
+    // height: calc(100vh - 250px);
     overflow: hidden;
     background-color: #fff;
     border-radius: 5px;

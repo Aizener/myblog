@@ -75,7 +75,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      list: ['Vue', 'uni-app', 'ES6', 'CSS3'],
+      list: ['Web前端', '服务端', '个人日常', 'Vue', 'Nest'],
       articles: [
         {
           title: '这是文章的标题这是文章的标题这是文章的标题这是文章的标题',

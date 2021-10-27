@@ -1,7 +1,8 @@
 <template>
   <div class="main-left-category bg-fff">
     <div class="fs-14 title p-10 pl-18 fw-bold flex flex-row-between flex-col-center">
-      小站栏目
+      <!-- 小站栏目 -->
+      热门栏目
       <nuxt-link to="">
         <svg-icon class="back-home" icon-name="icon-home" fill-color="#01AAED" size="20px"></svg-icon>
       </nuxt-link>
