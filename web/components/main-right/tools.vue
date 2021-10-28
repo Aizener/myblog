@@ -1,9 +1,6 @@
 <template>
   <div class="main-right-tools flex">
-    <div class="tool pointer flex flex-col flex-col-center bg-fff p-10" @click="handleBackTopFn">
-      <svg-icon icon-name="icon-back-top" size="28px" fill-color="#1e80ff"></svg-icon>
-      <p class="fs-12 color-999 mt-5">回到顶部</p>
-    </div>
+    <b-tool title="回到顶部" icon-name="icon-back-top" @handle="handleBackTopFn"></b-tool>
   </div>
 </template>
 
@@ -50,10 +47,4 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-.main-right-tools {
-  .tool {
-    border-radius: 5px;
-    box-shadow: 0 0 5px #ccc;
-  }
-}
 </style>

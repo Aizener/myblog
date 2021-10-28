@@ -1,8 +1,7 @@
-import { ArticleType } from '@/config/type';
 import request from '../request'
 
 export const getArticleList = (params: any) => {
-  return request.get('/article', { params });
+  return request.get('/article/list', { params });
 }
 
 export const addArticle = (form: any) => {
@@ -18,7 +17,7 @@ export const removeArticle = (id: number) => {
 }
 
 export const removeArticleMulti = (ids: Array<number>) => {
-  return request.delete(`/article/remove/multi`, {
+  return request.delete(`/article/remove`, {
     data: {
       ids
     }

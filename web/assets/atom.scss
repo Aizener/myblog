@@ -1,6 +1,6 @@
 li { list-style: none; }
 a { text-decoration: none; color: #333; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
 html {
   font-family: -apple-system,system-ui,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Helvetica Neue","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Arial;
 }
@@ -27,8 +27,8 @@ body {
 
 .mx-auto { margin-left: auto; margin-right: auto; }
 
-$colors: #000, #333, #666, #999, #ccc, #ddd, #eee, #fff, #1E90FF;
-$colorName: '000', '333', '666', '999', 'ccc', 'ddd', 'eee', 'fff', '0ff';
+$colors: #000, #333, #666, #999, #ccc, #ddd, #eee, #fff, gray, #1E90FF;
+$colorName: '000', '333', '666', '999', 'ccc', 'ddd', 'eee', 'fff', 'gray', '0ff';
 
 @for $i from 1 through length($colors) {
   $color: nth($colors, $i);
@@ -83,4 +83,18 @@ $colorName: '000', '333', '666', '999', 'ccc', 'ddd', 'eee', 'fff', '0ff';
 }
 ::-webkit-scrollbar {
   width: 0;
+}
+
+.hover-shadow {
+  box-shadow: 3px 3px 5px #999;
+  &:hover {
+    box-shadow: 3px 3px 5px inset #555;
+  }
+}
+
+.active-shadow {
+  box-shadow: 3px 3px 5px #999;
+  &:active {
+    box-shadow: 3px 3px 5px inset #555;
+  }
 }

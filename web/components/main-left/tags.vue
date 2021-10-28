@@ -1,7 +1,7 @@
 <template>
   <div class="main-left-tags bg-fff p-5 flex flex-wrap flex-row-start flex-col-center">
     <nuxt-link
-      class="item m-5 fs-12"
+      class="item m-5 fs-12 hover-shadow"
       to=""
       :style="getStyle(item)"
       v-for="(item, idx) in tags"
@@ -71,9 +71,6 @@ export default Vue.extend({
     color: #fff;
     background: orange;
     border-radius: 5px;
-    &:hover {
-      box-shadow: 0 0 5px #333;
-    }
   }
 }
 </style>

@@ -29,7 +29,7 @@
           <p class="tags" v-for="(item, idx) in getTags(scope.row.tags)" :key="idx">{{ item }}</p>
         </div>
         <div v-if="scope.col === 'category'">
-          <p>{{ getCategory(scope.row.category) }}</p>
+          <p>{{ getCategories(scope.row.category) }}</p>
         </div>
       </template>
     </b-table>
@@ -43,7 +43,7 @@
     ></el-pagination>
     <b-drawer-form
       ref="drawForm"
-      title="文章添加"
+      title="文章管理"
       v-model="showDrawer"
       :form-data="articleForm"
       :form-rules="articleRules"
@@ -53,13 +53,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, getCurrentInstance, reactive, ref, toRefs } from 'vue';
+import { defineComponent, onBeforeMount, toRefs } from 'vue';
 import BTable from '@/components/b-table.vue';
 import BDrawerForm from '@/components/b-drawer-form.vue';
-import initData from './initData';
-import { ArticleType } from '@/config/type';
 import { qiniuPreview } from '@/config/index';
 import useForm from './useForm';
+import useTable from './useTable';
+import { getTagList } from '@/utils/api/tag';
+import { getCategoryList } from '@/utils/api/category';
 
 export default defineComponent({
   components: {
@@ -67,81 +68,48 @@ export default defineComponent({
     BDrawerForm
   },
   setup(props) {
-    const state = reactive<{
-      articleForm: any,
-      articleRules: any,
-      tableHeader: any,
-      tableData: any,
-      total: any,
-      seoForm: any
-    }>({
-      articleForm: {
-        title: { label: '标题', value: '', type: 'input' },
-        desc: { label: '描述', value: '', type: 'text' },
-        content: { label: '文章内容', value: '', type: 'md'  },
-        cover: { label: '封面图', value: '', type: 'file' },
-        category: { label: '分类', value: undefined, type: 'select' },
-        tags: { label: '标签', value: [], type: 'select-multi' },
-      },
-      articleRules: {
-        title: { required: true, trigger: 'blur', message: '请输入文章标题' },
-        desc: { required: true, trigger: 'blur', message: '请输入文章描述' },
-        content: { required: true, trigger: 'blur', message: '请输入文章内容' },
-        cover: { required: true, trigger: 'change', message: '请选择文章封面图' },
-        category: { required: true, trigger: 'change', message: '请选择分类' },
-        tags: { required: true, trigger: 'change', message: '请选择标签' }
-      },
-      tableHeader: {
-        title: { label: '标题', width: '200px', search: true, type: 'input' },
-        desc: { label: '描述', width: '350px', search: true, type: 'input' },
-        cover: { label: '封面图', width: '160px' },
-        view: { label: '浏览数', width: '80px'},
-        good: { label: '点赞数', width: '80px'},
-        message: { label: '留言数', width: '80px'},
-        category: { label: '分类', width: '160px', search: true, type: 'select' },
-        tags: { label: '标签', width: '200px' },
-        updateTime: { label: '修改时间', width: '120px' },
-        createTime: { label: '创建时间', width: '120px' }
-      },
-      tableData: [],
-      total: 0,
-      seoForm: {
-        page: 1,
-        size: 6
-      }
-    })
-    const { initArticleData }: any = initData(state);
-
-    const handleChangePage = (page: number) => {
-      state.seoForm.page = page;
-      initArticleData();
-    }
-
-    const handleSearch = (conditions: any) => {
-      state.seoForm.page = 1;
-      for (const key in conditions) {
-        state.seoForm[key] = conditions[key];
-      }
-      initArticleData();
-    }
-
     const {
-      getTags,
-      getCategory,
-      showDrawer,
-      tableRef,
-      drawForm,
-      handleEdit,
+      tableState,
+      initData,
+      handleChangePage,
       handleRemove,
       handleRemoveMulti,
+      tableRef,
+      handleSearch
+    } = useTable();
+    
+    const {
+      formState,
+      getTags,
+      getCategories,
+      showDrawer,
+      drawForm,
+      handleEdit,
       hanndleConfirm
-    } = useForm(state, initArticleData);
+    } = useForm(initData);
+
+    onBeforeMount(async () => {
+      const categoryRes: any = await getCategoryList();
+      if (categoryRes.code === 200) {
+        formState.articleForm.category.options = categoryRes.data.map((item: any) => {
+          return { label: item.title, value: item.id }
+        })
+        tableState.tableHeader.category.options = [{ value: 0, label: '全部' }].concat(formState.articleForm.category.options);
+      }
+      const tagRes: any = await getTagList();
+      if (tagRes.code === 200) {
+        formState.articleForm.tags.options = tagRes.data.map((item: any) => {
+          return { label: item.title, value: item.id }
+        })
+      }
+    });
 
     return {
-      ...toRefs(state),
+      ...toRefs(tableState),
+      ...toRefs(formState),
       getTags,
       tableRef,
-      getCategory,
+      getCategories,
       qiniuPreview,
       showDrawer,
       drawForm,
