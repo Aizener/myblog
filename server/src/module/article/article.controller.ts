@@ -1,5 +1,6 @@
 import { Bind, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, Req, Res } from '@nestjs/common';
 import { ArticleParam } from 'src/decorator/router/index';
+import Article from 'src/entity/article.entity';
 import { DeleteResult } from 'typeorm';
 import { ArticleService } from './article.service';
 
@@ -14,6 +15,22 @@ export class ArticleController {
       code: HttpStatus.OK,
       data: data,
       total: total,
+    })
+  }
+
+  @Get(':id')
+  @Bind(Param('id'))
+  async getArticleById(id, @Res() res) {
+    const article: Article = await this.articleService.findOne(id);
+    if (!article) {
+      res.json({
+        code: HttpStatus.NOT_FOUND,
+        msg: '文章已经不存在'
+      })
+    }
+    res.json({
+      code: HttpStatus.OK,
+      data: article
     })
   }
 

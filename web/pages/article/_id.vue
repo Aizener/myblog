@@ -1,38 +1,48 @@
 <template>
-  <div class="article">
+  <div class="article" v-if="article.id">
     <div class="article-detail">
-      <h3 class="article-title">这是文章的标题，可能会比较的长哦这是文章的标题，可能会比较的长哦</h3>
+      <h3 class="article-title">{{ article.title }}</h3>
       <div class="article-info flex flex-row-between">
         <div class="flex">
-          <p class="time time1">发布时间：2021-10-25 21:46</p>
-          <p class="time time2">最近更新：2021-10-25 21:46</p>
+          <p class="time time1">发布时间：{{ article.createTime }}</p>
+          <p class="time time2" v-if="article.updateTime">最近更新：{{ article.updateTime }}</p>
         </div>
-        <p class="time ml-30">浏览：333</p>
+        <p class="time ml-30">浏览：{{ article.view }}</p>
       </div>
       <div class="article-content" @scroll="onScroll" :class="getClass">
-        {{ '撒的发生的快递费静安寺克劳福德静安寺'.repeat(100) }}
+        <div class="md-preview default-theme" v-html="article.content"></div>
       </div>
     </div>
 
     <div class="article-operate mt-15 flex flex-row-end">
       <div class="item">
-        <b-tool title="11" icon-name="icon-good"></b-tool>
+        <b-tool :title="String(article.good)" icon-name="icon-good"></b-tool>
       </div>
     </div>
   </div>
+  <div v-else class="flex flex-row-center p-15 bg-fff fs-14 color-333 br-5">文章已经找不到了o(╥﹏╥)o~~~</div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { throttle } from '~/utils';
-
+import { getArticleById } from '~/utils/api/article';
+import '@/utils/style.css';
 
 export default Vue.extend({
+  head() {
+    return {
+      link: [
+        { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/highlight.js@11.2.0/styles/atom-one-dark.css' }
+      ]
+    }
+  },
   data() {
     return {
       articleScrollHeight: 0,
       articleHeight: 0,
-      articleTop: 0
+      articleTop: 0,
+      article: { id: '', title: '', createTime: '', updateTime: '', view: '', good: '', content: '' }
     }
   },
   computed: {
@@ -47,6 +57,15 @@ export default Vue.extend({
         }
       } else {
         return '';
+      }
+    }
+  },
+  async asyncData({ params }) {
+    const id = Number(params.id);
+    const res: any = await getArticleById(id);
+    if (res.code === 200) {
+      return {
+        article: res.data
       }
     }
   },

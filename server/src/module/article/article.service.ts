@@ -28,6 +28,7 @@ export class ArticleService {
       skip: (page - 1) * size,
       where: {},
       relations: ['category', 'tags'],
+      select: ['id', 'title', 'desc', 'cover', 'good', 'message', 'view', 'updateTime', 'createTime']
     };
     title && (conditions.where.title = Like(`%${title}%`));
     desc && (conditions.where.desc = Like(`%${desc}%`));
@@ -35,6 +36,10 @@ export class ArticleService {
 
     const [res, total]: any = await this.articleRepository.findAndCount(conditions);
     return [res, total];
+  }
+
+  async findOne(id: number) {
+    return await this.articleRepository.findOne(id);
   }
 
   async save(article: Article) {

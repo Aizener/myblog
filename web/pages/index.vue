@@ -9,7 +9,7 @@
     <div class="articles flex flex-wrap">
       <div class="articles-left flex-1 mr-8">
         <div class="article mt-15" v-for="(item, idx) in getArticleLeft" :key="idx" :style="getStyle(idx, 'left')">
-          <img :src="item.cover" alt="" class="article-cover">
+          <img :src="qiniuHost + item.cover" alt="" class="article-cover">
           <div class="article-intro flex-center flex-col bg-fff p-10">
             <p class="fs-14 color-fff text-center">{{ item.title }}</p>
             <div class="article-detail flex mt-10">
@@ -26,13 +26,13 @@
                 <p class="color-fff fs-13 ml-5">{{ item.comment }}</p>
               </div>
             </div>
-            <nuxt-link to="" class="fs-14 color-fff px-10 py-5 mt-10">查看详情</nuxt-link>
+            <nuxt-link :to="`/article/${item.id}`" class="fs-14 color-fff px-10 py-5 mt-10">查看详情</nuxt-link>
           </div>
         </div>
       </div>
       <div class="articles-right flex-1 ml-8">
         <div class="article mt-15" v-for="(item, idx) in getArticleRight" :key="idx" :style="getStyle(idx, 'right')">
-          <img :src="item.cover" alt="" class="article-cover">
+          <img :src="qiniuHost + item.cover" alt="" class="article-cover">
           <div class="article-intro flex-center flex-col bg-fff p-10">
             <p class="fs-14 color-fff text-center">{{ item.title }}</p>
             <div class="article-detail flex mt-10">
@@ -49,7 +49,7 @@
                 <p class="color-fff fs-13 ml-5">{{ item.comment }}</p>
               </div>
             </div>
-            <nuxt-link to="" class="fs-14 color-fff px-10 py-5 mt-10">查看详情</nuxt-link>
+            <nuxt-link :to="`/article/${item.id}`" class="fs-14 color-fff px-10 py-5 mt-10">查看详情</nuxt-link>
           </div>
         </div>
       </div>
@@ -59,8 +59,11 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { qiniuHost } from '@/utils/config'
+import { getArticleList } from '~/utils/api/article'
 
 type ArticleType = {
+  id: number,
   title: string,
   view: number,
   good: number,
@@ -76,78 +79,89 @@ export default Vue.extend({
   data() {
     return {
       list: ['Web前端', '服务端', '个人日常', 'Vue', 'Nest'],
+      qiniuHost: qiniuHost,
       articles: [
-        {
-          title: '这是文章的标题这是文章的标题这是文章的标题这是文章的标题',
-          view: 100,
-          good: 20,
-          comment: 36,
-          cover: 'https://img0.baidu.com/it/u=551436277,2444343558&fm=26&fmt=auto'
-        },
-        {
-          title: '这是文章的标题这是',
-          view: 100,
-          good: 20,
-          comment: 11,
-          cover: 'https://img1.baidu.com/it/u=767725048,195827572&fm=15&fmt=auto'
-        },
-        {
-          title: '这是文章的标题这是文章的标题这',
-          view: 100,
-          good: 20,
-          comment: 36,
-          cover: 'https://img2.baidu.com/it/u=2892856748,361950048&fm=15&fmt=auto'
-        },
-        {
-          title: '奥德赛发放',
-          view: 100,
-          good: 20,
-          comment: 36,
-          cover: 'https://img0.baidu.com/it/u=1690236998,2081025204&fm=26&fmt=auto'
-        },
-        {
-          title: '这是文章的标题',
-          view: 100,
-          good: 20,
-          comment: 36,
-          cover: 'https://img2.baidu.com/it/u=3155018116,3871246300&fm=26&fmt=auto'
-        },
-        {
-          title: '这是文章的标题这是文章的标题这',
-          view: 100,
-          good: 20,
-          comment: 36,
-          cover: 'https://img1.baidu.com/it/u=4028025498,339721895&fm=15&fmt=auto'
-        },
-        {
-          title: '奥德赛发放',
-          view: 100,
-          good: 20,
-          comment: 36,
-          cover: 'https://img1.baidu.com/it/u=4188097245,2789632243&fm=15&fmt=auto'
-        },
-        {
-          title: '这是文章的标题',
-          view: 100,
-          good: 20,
-          comment: 36,
-          cover: 'https://img0.baidu.com/it/u=210529197,2103975609&fm=253&fmt=auto&app=120&f=JPEG?w=301&h=169'
-        }
+        // {
+        //   title: '这是文章的标题这是文章的标题这是文章的标题这是文章的标题',
+        //   view: 100,
+        //   good: 20,
+        //   comment: 36,
+        //   cover: 'https://img0.baidu.com/it/u=551436277,2444343558&fm=26&fmt=auto'
+        // },
+        // {
+        //   title: '这是文章的标题这是',
+        //   view: 100,
+        //   good: 20,
+        //   comment: 11,
+        //   cover: 'https://img1.baidu.com/it/u=767725048,195827572&fm=15&fmt=auto'
+        // },
+        // {
+        //   title: '这是文章的标题这是文章的标题这',
+        //   view: 100,
+        //   good: 20,
+        //   comment: 36,
+        //   cover: 'https://img2.baidu.com/it/u=2892856748,361950048&fm=15&fmt=auto'
+        // },
+        // {
+        //   title: '奥德赛发放',
+        //   view: 100,
+        //   good: 20,
+        //   comment: 36,
+        //   cover: 'https://img0.baidu.com/it/u=1690236998,2081025204&fm=26&fmt=auto'
+        // },
+        // {
+        //   title: '这是文章的标题',
+        //   view: 100,
+        //   good: 20,
+        //   comment: 36,
+        //   cover: 'https://img2.baidu.com/it/u=3155018116,3871246300&fm=26&fmt=auto'
+        // },
+        // {
+        //   title: '这是文章的标题这是文章的标题这',
+        //   view: 100,
+        //   good: 20,
+        //   comment: 36,
+        //   cover: 'https://img1.baidu.com/it/u=4028025498,339721895&fm=15&fmt=auto'
+        // },
+        // {
+        //   title: '奥德赛发放',
+        //   view: 100,
+        //   good: 20,
+        //   comment: 36,
+        //   cover: 'https://img1.baidu.com/it/u=4188097245,2789632243&fm=15&fmt=auto'
+        // },
+        // {
+        //   title: '这是文章的标题',
+        //   view: 100,
+        //   good: 20,
+        //   comment: 36,
+        //   cover: 'https://img0.baidu.com/it/u=210529197,2103975609&fm=253&fmt=auto&app=120&f=JPEG?w=301&h=169'
+        // }
       ],
+      articles2: [],
       scrollTop: 0
+    }
+  },
+  async asyncData() {
+    const res: any = await getArticleList();
+    if (res.code === 200) {
+      return {
+        articles: res.data
+      }
     }
   },
   mounted() {
     // document.addEventListener('scroll', () => {
     //   this.scrollTop = document.documentElement.scrollTop
     // })
+    console.log(this.articles)
   },
   computed: {
     getArticleLeft(): Array<ArticleType> {
-      return [...this.articles, ...this.articles].filter((item: ArticleType, idx) => idx % 2 === 0)
+      return this.articles.filter((item: ArticleType, idx) => idx % 2 === 0)
     },
     getArticleRight(): Array<ArticleType> {
-      return [...this.articles, ...this.articles].filter((item: ArticleType, idx) => idx % 2 === 1)
+      return this.articles.filter((item: ArticleType, idx) => idx % 2 === 1)
     }
   },
   methods: {

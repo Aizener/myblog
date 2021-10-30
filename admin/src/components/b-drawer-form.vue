@@ -70,7 +70,7 @@
               </el-dialog>
             </template>
             <template v-else-if="item.type === 'md'">
-              <md-editor :preview="false" editorClass="b-editor" v-model="model[idx]" />
+              <md-editor :preview="false" editorClass="b-editor" v-model="model[idx]" @onHtmlChanged="changeHtml($event, idx)" />
             </template>
             <template v-else>
               <slot :row="item"></slot>
@@ -88,7 +88,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, getCurrentInstance, nextTick, onBeforeMount, ref, toRefs, watch } from 'vue';
+import { defineComponent, getCurrentInstance, nextTick, ref, toRefs, watch } from 'vue';
 import MdEditor from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import { qiniuUpload, qiniuPreview } from '@/config/index';
@@ -124,6 +124,7 @@ export default defineComponent({
     const { proxy }: any = getCurrentInstance();
     const qiniuData = ref();
     const previewImage = ref();
+    const mdHTML = ref();
 
     // 自定义一份表单model数据
     const model = ref<any>({});
@@ -140,6 +141,7 @@ export default defineComponent({
     // 点击确定按钮
     const handleAdd = () => {
       formRef.value.validate((isValid: boolean) => {
+        model.value.content = mdHTML.value;
         if (isValid) {
           emit('confirm', model.value)
         }
@@ -149,7 +151,6 @@ export default defineComponent({
     // 移除图片
     const handleRemove = (key: string) => {
       return (file: any, fileList: any) => {
-        console.log(file, fileList)
         model.value[key] = '';
       }
     }
@@ -190,11 +191,17 @@ export default defineComponent({
       }
     }
 
+    // 获取md的html代码格式
+    const changeHtml = (h: string, idx: string) => {
+      mdHTML.value = h;
+    }
+
     const dialogVisible = ref(false);
 
     return {
       show,
       model,
+      changeHtml,
       resetForm,
       uploadRef,
       qiniuUpload,

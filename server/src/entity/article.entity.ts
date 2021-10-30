@@ -39,8 +39,7 @@ class Article {
   cover = '';
 
   @Column({
-    type: 'varchar',
-    length: 100,
+    type: 'text',
     comment: '内容',
   })
   content = '';
