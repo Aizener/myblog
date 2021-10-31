@@ -30,7 +30,6 @@ export default Vue.extend({
     if (res.code === 200) {
       this.tags = res.data;
     }
-    console.log(this.tags)
   },
   methods: {
     getStyle(item: { articles: number }) {

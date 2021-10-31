@@ -14,7 +14,7 @@
         :key="idx"
       >
         <p>{{ item.title }}</p>
-        <b-tag class="tag" :title="item.articles"></b-tag>
+        <b-tag class="tag" :title="String(item.articles)"></b-tag>
       </div>
     </div>
   </div>

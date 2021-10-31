@@ -5,7 +5,7 @@
         <p class="fs-16 fw-bold">公告栏</p>
         <svg-icon icon-name="icon-notice" size="20px"></svg-icon>
       </div>
-      <div class="list">
+      <!-- <div class="list">
         <p class="item fs-13 color-999 p-10">
           阿斯加德福利卡时间段里看风景sad
           <nuxt-link class="color-0ff" to="/article/1">详情>></nuxt-link>
@@ -18,10 +18,11 @@
           阿斯加德福利卡时间段里看风景sad
           <nuxt-link class="color-0ff" to="/article/1">详情>></nuxt-link>
         </p>
-      </div>
-      <div class="flex flex-row-center flex-col-center py-10">
+      </div> -->
+      <!-- <div class="flex flex-row-center flex-col-center py-10">
         <nuxt-link class="fs-14 ml-5 color-666 hover-underline" to="/board">更多公告</nuxt-link>
-      </div>
+      </div> -->
+      <p class="fs-12 color-999 text-center py-30">暂无公告</p>
     </div>
   </div>
 </template>

@@ -46,8 +46,27 @@
       <div style="min-width: 250px;"></div>
     </div>
     <transition v-if="init" name="fade">
-      <div class="menu p-10 bg-fff" v-show="showMenu" :style="getMenuStyle" :key="menuKey">
-        111
+      <div class="menu bg-fff" v-show="showMenu" :style="getMenuStyle" :key="menuKey">
+        <div class="menu-item flex flex-col-center pointer p-10" @click="handleClick('home')">
+          <svg-icon icon-name="icon-home" fill-color="#666"></svg-icon>
+          <p class="ml-10 color-666">回到首页</p>
+        </div>
+        <div class="menu-item flex flex-col-center pointer p-10" @click="handleClick('refresh')">
+          <svg-icon icon-name="icon-refresh" fill-color="#666"></svg-icon>
+          <p class="ml-10 color-666">刷新页面</p>
+        </div>
+        <!-- <div class="menu-item flex flex-col-center pointer p-10" @click="handleClick('coder')">
+          <svg-icon icon-name="icon-coder" fill-color="#666"></svg-icon>
+          <p class="ml-10 color-666">开发者工具</p>
+        </div> -->
+        <div class="menu-music flex flex-row-center p-10" @click.stop="">
+          <svg-icon class="pointer" icon-name="icon-last" size="30" fill-color="#666" @click.native="handleClick('last')"></svg-icon>
+          <svg-icon class="pointer mx-20" icon-name="icon-playstop" size="30" fill-color="#666" @click.native="handleClick('toggle')"></svg-icon>
+          <svg-icon class="pointer" icon-name="icon-next" size="30" fill-color="#666" @click.native="handleClick('next')"></svg-icon>
+        </div>
+        <div class="menu-time py-10 pr-5">
+          <p class="fs-13 text-right color-666">{{ currentTime }}</p>
+        </div>
       </div>
     </transition>
   </div>
@@ -66,7 +85,8 @@ export default Vue.extend({
       menuLeft: 0,
       menuTop: 0,
       menuKey: 0,
-      init: false
+      init: false,
+      currentTime: ''
     }
   },
   computed: {
@@ -95,9 +115,44 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.init = true
+    this.init = true;
+    this.setCurrentTime();
   },
   methods: {
+    setCurrentTime() {
+      setTimeout(() => {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hour = String(date.getHours()).padStart(2, '0');
+        const minute = String(date.getMinutes()).padStart(2, '0');
+        const second = String(date.getSeconds()).padStart(2, '0');
+        this.currentTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+        this.setCurrentTime();
+      }, 1e3)
+    },
+    handleClick(type: string) {
+      switch(type) {
+        case 'home':
+          this.$router.push('/');
+          break;
+        case 'refresh':
+          window.location.reload();
+          break;
+        case 'last':
+          this.$root.$emit('music-last');
+          break;
+        case 'next':
+          this.$root.$emit('music-next');
+          break;
+        case 'toggle':
+          this.$root.$emit('music-toggle');
+          break;
+        case 'coder':
+          break;
+      }
+    },
     handleClickedMenuFn(e: MouseEvent) {
       this.menuLeft = e.pageX
       this.menuTop = e.pageY
@@ -193,6 +248,16 @@ $width: 1050px;
   position: fixed;
   border-radius: 5px;
   width: 180px;
+  overflow: hidden;
+  &-item {
+    border-bottom: 1px dashed #ddd;
+    &:hover {
+      background-color: #eee;
+    }
+  }
+  &-music {
+    border-bottom: 1px dashed #ddd;
+  }
 }
 
 .fade-enter, .fade-leave-to {

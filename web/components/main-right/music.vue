@@ -7,92 +7,48 @@
 <script lang="ts">
 import Vue from 'vue'
 import 'aplayer/dist/APlayer.min.css'
+import { getMusicList } from '~/utils/api/music'
 
 export default Vue.extend({
   data() {
     return {
-      ap: null
+      ap: null as any
     }
   },
-  mounted() {
-    const APlayer = require('aplayer')
-    this.ap = new APlayer({
-      container: document.getElementById('audio'),
-      listFolded: false,
-      listMaxHeight: '220px',
-      lrcType: 3,
-      audio: [{
-          name: 'kabuda',
+  async mounted() {
+    const res: any = await getMusicList(0, 20);
+    if (res.code === 200) {
+      const audios = res.data.map((item: any) => {
+        return {
+          name: item.title,
           artist: 'artist',
-          url: 'https://mp3.9ku.com/hot/2004/07-17/42620.mp3',
+          url: item.url,
           cover: 'https://img.xiaoyou66.com/images/2020/02/06/tKb5.jpg'
-      }, {
-          name: 'kabuda',
-          artist: 'artist',
-          url: 'https://mp3.9ku.com/hot/2004/07-17/42620.mp3',
-          cover: 'https://img.xiaoyou66.com/images/2020/02/06/tKb5.jpg'
-      }, {
-          name: 'kabuda',
-          artist: 'artist',
-          url: 'https://mp3.9ku.com/hot/2004/07-17/42620.mp3',
-          cover: 'https://img.xiaoyou66.com/images/2020/02/06/tKb5.jpg'
-      }, {
-          name: 'kabuda',
-          artist: 'artist',
-          url: 'https://mp3.9ku.com/hot/2004/07-17/42620.mp3',
-          cover: 'https://img.xiaoyou66.com/images/2020/02/06/tKb5.jpg'
-      }, {
-          name: 'kabuda',
-          artist: 'artist',
-          url: 'https://mp3.9ku.com/hot/2004/07-17/42620.mp3',
-          cover: 'https://img.xiaoyou66.com/images/2020/02/06/tKb5.jpg'
-      }, {
-          name: 'kabuda',
-          artist: 'artist',
-          url: 'https://mp3.9ku.com/hot/2004/07-17/42620.mp3',
-          cover: 'https://img.xiaoyou66.com/images/2020/02/06/tKb5.jpg'
-      }, {
-          name: 'kabuda',
-          artist: 'artist',
-          url: 'https://mp3.9ku.com/hot/2004/07-17/42620.mp3',
-          cover: 'https://img.xiaoyou66.com/images/2020/02/06/tKb5.jpg'
-      }, {
-          name: 'kabuda',
-          artist: 'artist',
-          url: 'https://mp3.9ku.com/hot/2004/07-17/42620.mp3',
-          cover: 'https://img.xiaoyou66.com/images/2020/02/06/tKb5.jpg'
-      }, {
-          name: 'kabuda',
-          artist: 'artist',
-          url: 'https://mp3.9ku.com/hot/2004/07-17/42620.mp3',
-          cover: 'https://img.xiaoyou66.com/images/2020/02/06/tKb5.jpg'
-      }, {
-          name: 'kabuda',
-          artist: 'artist',
-          url: 'https://mp3.9ku.com/hot/2004/07-17/42620.mp3',
-          cover: 'https://img.xiaoyou66.com/images/2020/02/06/tKb5.jpg'
-      }, {
-          name: 'kabuda',
-          artist: 'artist',
-          url: 'https://mp3.9ku.com/hot/2004/07-17/42620.mp3',
-          cover: 'https://img.xiaoyou66.com/images/2020/02/06/tKb5.jpg'
-      }, {
-          name: 'kabuda',
-          artist: 'artist',
-          url: 'https://mp3.9ku.com/hot/2004/07-17/42620.mp3',
-          cover: 'https://img.xiaoyou66.com/images/2020/02/06/tKb5.jpg'
-      }, {
-          name: 'kabuda',
-          artist: 'artist',
-          url: 'https://mp3.9ku.com/hot/2004/07-17/42620.mp3',
-          cover: 'https://img.xiaoyou66.com/images/2020/02/06/tKb5.jpg'
-      }, {
-          name: 'kabuda',
-          artist: 'artist',
-          url: 'https://mp3.9ku.com/hot/2004/07-17/42620.mp3',
-          cover: 'https://img.xiaoyou66.com/images/2020/02/06/tKb5.jpg'
-      }]
-    });
+        }
+      });
+
+      const APlayer = require('aplayer')
+      this.ap = new APlayer({
+        container: document.getElementById('audio'),
+        listFolded: false,
+        listMaxHeight: '220px',
+        lrcType: 3,
+        audio: audios
+      });
+
+      this.$root.$on('music-last', () => {
+        this.ap.play();
+        this.ap.skipBack();
+      })
+      this.$root.$on('music-next', () => {
+        this.ap.play();
+        this.ap.skipForward();
+      })
+      this.$root.$on('music-toggle', () => {
+        const isPause = this.ap.audio.paused;
+        isPause ? this.ap.play() : this.ap.pause();
+      })
+    }
   }
 })
 </script>
