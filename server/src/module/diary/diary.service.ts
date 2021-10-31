@@ -33,6 +33,10 @@ export class DiaryService {
     return [res, total];
   }
 
+  async getTotal() {
+    return await this.diaryRepository.count();
+  }
+
   async save(diary: Diary) {
     return await this.diaryRepository.save(diary);
   }

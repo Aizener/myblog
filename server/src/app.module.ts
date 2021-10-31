@@ -9,6 +9,7 @@ import { UploadModule } from './module/upload/upload.module';
 import { TagModule } from './module/tag/tag.module';
 import { DiaryModule } from './module/diary/diary.module';
 import { MusicModule } from './module/music/music.module';
+import { CommonModule } from './module/common/common.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { MusicModule } from './module/music/music.module';
     TagModule,
     DiaryModule,
     MusicModule,
+    CommonModule,
   ],
   controllers: [AppController],
   providers: [AppService],

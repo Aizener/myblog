@@ -144,7 +144,7 @@ export default Vue.extend({
   },
   async asyncData() {
     const res: any = await getArticleList();
-    if (res.code === 200) {
+    if (res && res.code === 200) {
       return {
         articles: res.data
       }

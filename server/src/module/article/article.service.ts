@@ -42,6 +42,10 @@ export class ArticleService {
     return await this.articleRepository.findOne(id);
   }
 
+  async getTotal() {
+    return await this.articleRepository.count();
+  }
+
   async save(article: Article) {
     return await this.articleRepository.save(article);
   }

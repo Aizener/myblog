@@ -16,6 +16,22 @@ export class TagController {
     })
   }
 
+  @Get('/list/activity')
+  async getTagAndArticle(@Res() res) {
+    const data = await this.tagService.findTagAndArticle({ page: 1, size: 9 });
+    const tags = data.map(item => {
+      return {
+        id: item.id,
+        title: item.title,
+        articles: item.articles.length
+      }
+    })
+    res.json({
+      code: 200,
+      data: tags
+    })
+  }
+
   @Post('/save')
   async addArticle(@TagParam() diary, @Res() res) {
     const ret = await this.tagService.save(diary);

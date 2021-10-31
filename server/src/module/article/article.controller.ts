@@ -18,6 +18,15 @@ export class ArticleController {
     })
   }
 
+  @Get('/total')
+  async getArticleTotal(@Res() res) {
+    const total = await this.articleService.getTotal();
+    res.json({
+      code: HttpStatus.OK,
+      data: total
+    })
+  }
+
   @Get(':id')
   @Bind(Param('id'))
   async getArticleById(id, @Res() res) {

@@ -117,9 +117,9 @@ $width: 1050px;
   width: 100%;
   min-height: 100vh;
   padding-top: 140px;
-  background: url(https://img.xiaoyou66.com/images/2020/02/06/tKb5.jpg) no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
+  background: url(https://img.xiaoyou66.com/images/2020/02/06/tKb5.jpg) repeat;
+  // background-attachment: fixed;
+  // background-size: cover;
 }
 .header {
   width: 100%;

@@ -3,7 +3,7 @@
     <div class="fs-14 title p-10 pl-18 fw-bold flex flex-row-between flex-col-center">
       <!-- 小站栏目 -->
       热门栏目
-      <nuxt-link to="">
+      <nuxt-link to="/">
         <svg-icon class="back-home" icon-name="icon-home" fill-color="#01AAED" size="20px"></svg-icon>
       </nuxt-link>
     </div>
@@ -24,10 +24,22 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+import { getTotal } from '~/utils/api/home';
 
-}
+export default Vue.extend({
+  data() {
+    return {
+      article: '',
+
+    }
+  },
+  async created() {
+    const total = await getTotal();
+    console.log(total);
+  }
+})
 </script>
 
 <style lang="scss">

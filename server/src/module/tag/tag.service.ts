@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import Tag from 'src/entity/tag.entity';
-import { Like, Repository } from 'typeorm';
+import { getConnection, Like, Repository } from 'typeorm';
 
 @Injectable()
 export class TagService {
@@ -31,6 +31,23 @@ export class TagService {
 
     const [res, total]: any = await this.tagRepository.findAndCount(conditions);
     return [res, total];
+  }
+
+  async findTagAndArticle({
+    page,
+    size
+  }: {
+    page: number,
+    size: number
+  }) {
+    const res: any = await getConnection()
+      .createQueryBuilder()
+      .select(['tag', 'article.id'])
+      .from(Tag, 'tag')
+      .leftJoin('tag.articles', 'article')
+      .getMany();
+
+    return res;
   }
 
   async save(tag: Tag) {

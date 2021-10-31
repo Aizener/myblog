@@ -3,7 +3,7 @@
     <div class="avatar-wrapper flex flex-row-between px-10 py-15">
       <img class="avatar" src="@/static/avatar.jpg" alt="">
       <div class="flex flex-col py-10">
-        <p class="fs-16 fw-bold">可乐爱宅着</p>
+        <p class="fs-16 fw-bold text-right">好想好想</p>
         <div class="flex mt-5">
           <b-tag title="中二"></b-tag>
           <b-tag class="ml-5" title="宅" color="purple">宅</b-tag>
@@ -17,33 +17,51 @@
 
     <div class="social flex flex-row-between flex-col-center px-10 mt-30 mb-5">
       <div class="line flex-1"></div>
-      <nuxt-link to="">
+      <a target="_blank" href="https://github.com/Aizener">
         <svg-icon icon-name="icon-github" size="26px" fill-color="#666" class="social-icon mx-5"></svg-icon>
-      </nuxt-link>
+      </a>
       <div class="line flex-1"></div>
     </div>
 
     <div class="doc-wrapper flex flex-row-between p-10">
-      <div class="flex flex-col flex-col-center doc p-10">
-        <p class="fs-14 color-fff">20</p>
+      <div class="flex flex-col flex-col-center doc p-10" @click="$router.push('/')">
+        <p class="fs-14 color-fff">{{ article }}</p>
         <p class="fs-14 color-333 color-fff">文章</p>
       </div>
-      <div class="flex flex-col flex-col-center doc p-10">
-        <p class="fs-14 color-fff">5</p>
+      <div class="flex flex-col flex-col-center doc p-10" @click="$router.push('/diary')">
+        <p class="fs-14 color-fff">{{ diary }}</p>
         <p class="fs-14 color-333 color-fff">日志</p>
       </div>
       <div class="flex flex-col flex-col-center doc p-10">
-        <p class="fs-14 color-fff">111</p>
+        <p class="fs-14 color-fff">{{ message || '0' }}</p>
         <p class="fs-14 color-333 color-fff">留言</p>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
 
-}
+<script lang="ts">
+import Vue from 'vue';
+import { getTotal } from '~/utils/api/home';
+
+export default Vue.extend({
+  data() {
+    return {
+      article: '',
+      diary: '',
+      message: ''
+    }
+  },
+  async created() {
+    const res: any = await getTotal();
+    if (res.code === 200) {
+      this.article = res.data.article;
+      this.diary = res.data.diary;
+      this.message = res.data.message;
+    }
+  }
+})
 </script>
 
 <style lang="scss">
