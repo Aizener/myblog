@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import Category from 'src/entity/category.entity';
-import { Like, Repository } from 'typeorm';
+import { getConnection, Like, Repository } from 'typeorm';
 
 @Injectable()
 export class CategoryService {
@@ -31,6 +31,19 @@ export class CategoryService {
 
     const [res, total]: any = await this.categoryRepository.findAndCount(conditions);
     return [res, total];
+  }
+
+  async findCategoryAndArticle() {
+    const res: any = await getConnection()
+      .createQueryBuilder()
+      .select(['category', 'article.id'])
+      .from(Category, 'category')
+      .leftJoin('category.articles', 'article')
+      .orderBy('category.createTime', 'DESC')
+      .limit(3)
+      .getMany();
+
+    return res;
   }
 
   async save(category: Category) {

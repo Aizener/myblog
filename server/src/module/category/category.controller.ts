@@ -17,6 +17,22 @@ export class CategoryController {
     })
   }
 
+  @Get('/list/activity')
+  async getTagAndArticle(@Res() res) {
+    const data = await this.categoryService.findCategoryAndArticle();
+    const category = data.map(item => {
+      return {
+        id: item.id,
+        title: item.title,
+        articles: item.articles.length
+      }
+    })
+    res.json({
+      code: 200,
+      data: category
+    })
+  }
+
   @Post('/save')
   async addArticle(@CategoryParam() diary, @Res() res) {
     const ret = await this.categoryService.save(diary);

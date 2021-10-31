@@ -12,25 +12,29 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { getActivityTags } from '~/utils/api/tag'
+type Tag = {
+  id: number,
+  title: string,
+  articles: number
+}
 
 export default Vue.extend({
   data() {
     return {
-      tags: [
-        { title: 'vue', num: 12 },
-        { title: 'uni-app', num: 2 },
-        { title: 'node', num: 32 },
-        { title: 'css3', num: 22 },
-        { title: 'uni-app', num: 2 },
-        { title: 'mysql', num: 32 },
-        { title: 'nginx', num: 22 },
-        { title: 'canvas', num: 112 }
-      ]
+      tags: [] as Tag[]
     }
   },
+  async created() {
+    const res: any = await getActivityTags();
+    if (res.code === 200) {
+      this.tags = res.data;
+    }
+    console.log(this.tags)
+  },
   methods: {
-    getStyle(item: { num: number }) {
-      const num = item.num
+    getStyle(item: { articles: number }) {
+      const num = item.articles
       const style: {
         fontSize: string,
         backgroundColor: string

@@ -33,18 +33,14 @@ export class TagService {
     return [res, total];
   }
 
-  async findTagAndArticle({
-    page,
-    size
-  }: {
-    page: number,
-    size: number
-  }) {
+  async findTagAndArticle() {
     const res: any = await getConnection()
       .createQueryBuilder()
       .select(['tag', 'article.id'])
       .from(Tag, 'tag')
       .leftJoin('tag.articles', 'article')
+      .orderBy('tag.createTime', 'DESC')
+      .limit(9)
       .getMany();
 
     return res;

@@ -8,17 +8,13 @@
       </nuxt-link>
     </div>
     <div class="category px-10 py-15">
-      <div class="category-item flex flex-row-between flex-col-center fs-14 pointer mb-10">
-        <p>Web前端</p>
-        <b-tag class="tag" title="3"></b-tag>
-      </div>
-      <div class="category-item flex flex-row-between flex-col-center fs-14 pointer mb-10">
-        <p>服务端</p>
-        <b-tag class="tag" title="1"></b-tag>
-      </div>
-      <div class="category-item flex flex-row-between flex-col-center fs-14 pointer">
-        <p>个人日常</p>
-        <b-tag class="tag" title="2"></b-tag>
+      <div
+        class="category-item flex flex-row-between flex-col-center fs-14 pointer mb-10"
+        v-for="(item, idx) in category"
+        :key="idx"
+      >
+        <p>{{ item.title }}</p>
+        <b-tag class="tag" :title="item.articles"></b-tag>
       </div>
     </div>
   </div>
@@ -26,19 +22,27 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { getTotal } from '~/utils/api/home';
+import { getActivityCategory } from '~/utils/api/category';
+
+type Category = {
+  id: number,
+  title: number,
+  articles: number
+}
 
 export default Vue.extend({
   data() {
     return {
       article: '',
-
+      category: [] as Category[]
     }
   },
   async created() {
-    const total = await getTotal();
-    console.log(total);
-  }
+    const res: any = await getActivityCategory();
+    if (res.code === 200) {
+      this.category = res.data;
+    }
+}
 })
 </script>
 

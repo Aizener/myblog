@@ -18,7 +18,7 @@ export class TagController {
 
   @Get('/list/activity')
   async getTagAndArticle(@Res() res) {
-    const data = await this.tagService.findTagAndArticle({ page: 1, size: 9 });
+    const data = await this.tagService.findTagAndArticle();
     const tags = data.map(item => {
       return {
         id: item.id,
