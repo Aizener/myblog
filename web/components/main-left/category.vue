@@ -39,7 +39,7 @@ export default Vue.extend({
   },
   async created() {
     const res: any = await getActivityCategory();
-    if (res.code === 200) {
+    if (res && res.code === 200) {
       this.category = res.data;
     }
 }

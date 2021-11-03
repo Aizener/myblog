@@ -27,7 +27,7 @@ export default Vue.extend({
   },
   async created() {
     const res: any = await getActivityTags();
-    if (res.code === 200) {
+    if (res && res.code === 200) {
       this.tags = res.data;
     }
   },

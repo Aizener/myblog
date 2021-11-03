@@ -95,6 +95,7 @@ export default Vue.extend({
     background-color: #fff;
     border-radius: 5px;
     padding: 15px;
+    box-shadow: 0 0 5px #ccc;
   }
   &-title {
     display: flex;

@@ -17,7 +17,7 @@ export default Vue.extend({
   },
   async mounted() {
     const res: any = await getMusicList(0, 20);
-    if (res.code === 200) {
+    if (res && res.code === 200) {
       const audios = res.data.map((item: any) => {
         return {
           name: item.title,

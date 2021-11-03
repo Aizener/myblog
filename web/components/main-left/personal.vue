@@ -55,7 +55,7 @@ export default Vue.extend({
   },
   async created() {
     const res: any = await getTotal();
-    if (res.code === 200) {
+    if (res && res.code === 200) {
       this.article = res.data.article;
       this.diary = res.data.diary;
       this.message = res.data.message;

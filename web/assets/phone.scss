@@ -1,0 +1,51 @@
+@media screen and (max-width: 768px) {
+  .header-container {
+    width: 100% !important;
+  }
+  .line-top {
+    width: 100%;
+    padding: 0 20px;
+    input {
+      width: 300px !important;
+    }
+    .logreg {
+      display: none;
+    }
+  }
+  .line-bottom {
+    margin: 20px;
+  }
+  .main {
+    margin: 15px 0 !important;
+    max-width: 100%;
+    &-container {
+      width: 100% !important;
+      flex-direction: column !important;
+      padding: 0 20px;
+    }
+    &-left, &-right {
+      width: 100% !important;
+      height: auto !important;
+      position: relative !important;
+    }
+    .category-list {
+      padding-bottom: 0;
+      a {
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  .diary-list-item {
+    .info {
+      display: flex;
+      height: auto !important;
+      flex-direction: column !important;
+      &-img {
+        width: 100% !important;
+        max-height: 200px;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
