@@ -1,7 +1,9 @@
 import axios from '../request';
 
-export const getArticleList = () => {
-  return axios.get('/article/list');
+export const getArticleList = (params: any) => {
+  return axios.get('/article/list', {
+    params: params
+  });
 }
 
 export const getArticleById = (id: number) => {

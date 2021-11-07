@@ -12,6 +12,7 @@
         class="category-item flex flex-row-between flex-col-center fs-14 pointer mb-10"
         v-for="(item, idx) in category"
         :key="idx"
+        @click="$router.push(`/?category=${item.id}`)"
       >
         <p>{{ item.title }}</p>
         <b-tag class="tag" :title="String(item.articles)"></b-tag>

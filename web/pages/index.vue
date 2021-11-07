@@ -2,9 +2,11 @@
   <div class="index">
     <div class="category-list flex flex-wrap py-10 bg-fff" :style="{ transform: `translateY(${scrollTop}px)` }">
       <nuxt-link class="ml-10" to="" v-for="(item, idx) in list" :key="idx">
-        <b-tag :title="item" class="item fs-13 hover-underline"></b-tag>
+        <b-tag :title="item.title" class="item fs-13 hover-underline"></b-tag>
       </nuxt-link>
     </div>
+    <b-loading :show="status === 1"></b-loading>
+    <b-empty :show="status === 0 && articles.length === 0"></b-empty>
 
     <div class="articles flex flex-wrap">
       <div class="articles-left flex-1 mr-8">
@@ -61,6 +63,7 @@
 import Vue from 'vue'
 import { qiniuHost } from '@/utils/config'
 import { getArticleList } from '~/utils/api/article'
+import { mapGetters } from 'vuex'
 
 type ArticleType = {
   id: number,
@@ -71,6 +74,8 @@ type ArticleType = {
   cover: string
 }
 
+let page = 1, size = 10;
+
 export default Vue.extend({
   transition: {
     name: 'page',
@@ -78,85 +83,55 @@ export default Vue.extend({
   },
   data() {
     return {
-      list: ['Web前端', '服务端', '个人日常', 'Vue', 'Nest'],
       qiniuHost: qiniuHost,
-      articles: [
-        // {
-        //   title: '这是文章的标题这是文章的标题这是文章的标题这是文章的标题',
-        //   view: 100,
-        //   good: 20,
-        //   comment: 36,
-        //   cover: 'https://img0.baidu.com/it/u=551436277,2444343558&fm=26&fmt=auto'
-        // },
-        // {
-        //   title: '这是文章的标题这是',
-        //   view: 100,
-        //   good: 20,
-        //   comment: 11,
-        //   cover: 'https://img1.baidu.com/it/u=767725048,195827572&fm=15&fmt=auto'
-        // },
-        // {
-        //   title: '这是文章的标题这是文章的标题这',
-        //   view: 100,
-        //   good: 20,
-        //   comment: 36,
-        //   cover: 'https://img2.baidu.com/it/u=2892856748,361950048&fm=15&fmt=auto'
-        // },
-        // {
-        //   title: '奥德赛发放',
-        //   view: 100,
-        //   good: 20,
-        //   comment: 36,
-        //   cover: 'https://img0.baidu.com/it/u=1690236998,2081025204&fm=26&fmt=auto'
-        // },
-        // {
-        //   title: '这是文章的标题',
-        //   view: 100,
-        //   good: 20,
-        //   comment: 36,
-        //   cover: 'https://img2.baidu.com/it/u=3155018116,3871246300&fm=26&fmt=auto'
-        // },
-        // {
-        //   title: '这是文章的标题这是文章的标题这',
-        //   view: 100,
-        //   good: 20,
-        //   comment: 36,
-        //   cover: 'https://img1.baidu.com/it/u=4028025498,339721895&fm=15&fmt=auto'
-        // },
-        // {
-        //   title: '奥德赛发放',
-        //   view: 100,
-        //   good: 20,
-        //   comment: 36,
-        //   cover: 'https://img1.baidu.com/it/u=4188097245,2789632243&fm=15&fmt=auto'
-        // },
-        // {
-        //   title: '这是文章的标题',
-        //   view: 100,
-        //   good: 20,
-        //   comment: 36,
-        //   cover: 'https://img0.baidu.com/it/u=210529197,2103975609&fm=253&fmt=auto&app=120&f=JPEG?w=301&h=169'
-        // }
-      ],
+      articles: [],
       articles2: [],
-      scrollTop: 0
+      scrollTop: 0,
+      status: 0
     }
   },
-  async asyncData() {
-    const res: any = await getArticleList();
+  async asyncData({ query }) {
+    const res: any = await getArticleList({
+      ...query,
+      page,
+      size
+    });
     if (res && res.code === 200) {
       return {
-        articles: res.data
+        articles: res.data,
+        status: 0
       }
     }
+  },
+  watch: {
+    article(val) {
+      console.log('article', val)
+    }
+  },
+  beforeRouteUpdate({ query }) {
+    this.status = 1;
+    this.articles = [];
+    setTimeout(async () => {
+      const res: any = await getArticleList({
+        ...query,
+        page,
+        size
+      });
+      if (res && res.code === 200) {
+        this.articles = res.data;
+      }
+      this.status = 0;
+    }, 500)
   },
   mounted() {
     // document.addEventListener('scroll', () => {
     //   this.scrollTop = document.documentElement.scrollTop
     // })
-    console.log(this.articles)
   },
   computed: {
+    ...mapGetters({
+      list: 'getTags'
+    }),
     getArticleLeft(): Array<ArticleType> {
       return this.articles.filter((item: ArticleType, idx) => idx % 2 === 0)
     },

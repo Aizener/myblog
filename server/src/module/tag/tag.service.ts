@@ -40,7 +40,7 @@ export class TagService {
       .from(Tag, 'tag')
       .leftJoin('tag.articles', 'article')
       .orderBy('tag.createTime', 'DESC')
-      .limit(9)
+      // .limit(9)
       .getMany();
 
     return res;

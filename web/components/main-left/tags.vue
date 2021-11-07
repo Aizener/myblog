@@ -2,7 +2,7 @@
   <div class="main-left-tags bg-fff p-5 flex flex-wrap flex-row-start flex-col-center">
     <nuxt-link
       class="item m-5 fs-12 hover-shadow"
-      to=""
+      :to="`/?tag=${item.id}`"
       :style="getStyle(item)"
       v-for="(item, idx) in tags"
       :key="idx"
@@ -11,8 +11,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { getActivityTags } from '~/utils/api/tag'
+import Vue from 'vue';
+import { getActivityTags } from '~/utils/api/tag';
+import { mapMutations } from 'vuex';
+
 type Tag = {
   id: number,
   title: string,
@@ -29,9 +31,11 @@ export default Vue.extend({
     const res: any = await getActivityTags();
     if (res && res.code === 200) {
       this.tags = res.data;
+      this.saveTags(this.tags);
     }
   },
   methods: {
+    ...mapMutations(['saveTags']),
     getStyle(item: { articles: number }) {
       const num = item.articles
       const style: {
