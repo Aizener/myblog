@@ -17,6 +17,7 @@
   }
   .main {
     margin: 15px 0 !important;
+    width: 100%;
     max-width: 100%;
     &-container {
       width: 100% !important;
@@ -33,6 +34,17 @@
       a {
         margin-bottom: 10px;
       }
+    }
+    &-left {
+      .doc-wrapper {
+        justify-content: center !important;
+        .doc {
+          margin: 5px 15px !important;
+        }
+      }
+    }
+    &-right {
+      right: auto !important;
     }
   }
 
