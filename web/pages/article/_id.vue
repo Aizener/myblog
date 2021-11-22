@@ -9,14 +9,14 @@
         </div>
         <p class="time ml-30">浏览：{{ article.view }}</p>
       </div>
-      <div class="article-content" @scroll="onScroll" :class="getClass">
+      <div class="article-content">
         <div class="md-preview default-theme" v-html="article.content"></div>
       </div>
     </div>
 
     <div class="article-operate mt-15 flex flex-row-end">
-      <div class="item">
-        <b-tool :title="String(article.good)" icon-name="icon-good"></b-tool>
+      <div class="item" @click="addGoodNum">
+        <b-tool :title="String(article.good)" icon-name="icon-good" :loading="loading"></b-tool>
       </div>
     </div>
   </div>
@@ -25,8 +25,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { throttle } from '~/utils';
-import { getArticleById } from '~/utils/api/article';
+import { addArticleGood, addArticleView, getArticleById } from '~/utils/api/article';
 import '@/utils/style.css';
 
 export default Vue.extend({
@@ -39,6 +38,8 @@ export default Vue.extend({
   },
   data() {
     return {
+      id: 0,
+      loading: false,
       articleScrollHeight: 0,
       articleHeight: 0,
       articleTop: 0,
@@ -46,19 +47,6 @@ export default Vue.extend({
     }
   },
   computed: {
-    getClass() {
-      if (this.articleScrollHeight > this.articleTop) {
-        if (this.articleTop >= this.articleScrollHeight - this.articleHeight) {
-          return 'top';
-        } else if (this.articleTop > 0) {
-          return 'all';
-        } else {
-          return 'bottom';
-        }
-      } else {
-        return '';
-      }
-    }
   },
   async asyncData({ params }) {
     const id = Number(params.id);
@@ -70,17 +58,20 @@ export default Vue.extend({
     }
   },
   methods: {
-    onScroll(e: any) {
-      // (this as any).handleArticleScrollEvent(e);
+    async addGoodNum() {
+      this.loading = true;
+      const res: any = await addArticleGood(this.id);
+      if (res.code === 200) {
+        this.article = res.data;
+      }
+      setTimeout(() => {
+        this.loading = false;
+      }, 500);
     }
   },
-  mounted() {
-    // (this as any).handleArticleScrollEvent = throttle((e: any) => {
-    //   const target = e.target;
-    //   this.articleScrollHeight = target.scrollHeight;
-    //   this.articleTop = target.scrollTop;
-    //   this.articleHeight = target.offsetHeight;
-    // });
+  async mounted() {
+    this.id = this.$route.params.id;
+    await addArticleView(this.id);
   }
 });
 </script>

@@ -36,6 +36,7 @@ export class ArticleController {
         code: HttpStatus.NOT_FOUND,
         msg: '文章已经不存在'
       })
+      return;
     }
     res.json({
       code: HttpStatus.OK,
@@ -70,6 +71,44 @@ export class ArticleController {
     if (ret.affected > 0) {
       throw new HttpException('删除的文章已不存在', HttpStatus.OK);
     }
+    res.json({
+      code: HttpStatus.OK,
+      data: ret
+    })
+  }
+
+  @Post('/view/:id')
+  @Bind(Param('id'))
+  async addArticleView(id, @Res() res) {
+    const article: Article = await this.articleService.findOne(id);
+    if (!article) {
+      res.json({
+        code: HttpStatus.NOT_FOUND,
+        msg: '文章已经不存在'
+      })
+      return;
+    }
+    article.view ++;
+    const ret: Article = await this.articleService.save(article);
+    res.json({
+      code: HttpStatus.OK,
+      data: ret
+    })
+  }
+
+  @Post('/good/:id')
+  @Bind(Param('id'))
+  async addArticleGood(id, @Res() res) {
+    const article: Article = await this.articleService.findOne(id);
+    if (!article) {
+      res.json({
+        code: HttpStatus.NOT_FOUND,
+        msg: '文章已经不存在'
+      })
+      return;
+    }
+    article.good ++;
+    const ret: Article = await this.articleService.save(article);
     res.json({
       code: HttpStatus.OK,
       data: ret

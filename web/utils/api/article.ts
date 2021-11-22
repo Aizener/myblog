@@ -9,3 +9,11 @@ export const getArticleList = (params: any) => {
 export const getArticleById = (id: number) => {
   return axios.get(`/article/${id}`);
 }
+
+export const addArticleView = (id: number) => {
+  return axios.post(`/article/view/${id}`);
+}
+
+export const addArticleGood = (id: number) => {
+  return axios.post(`/article/good/${id}`);
+}

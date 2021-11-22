@@ -10,7 +10,7 @@ axios.interceptors.request.use((config: AxiosRequestConfig) => {
 });
 
 axios.interceptors.response.use((response: AxiosResponse) => {
-  if (response.status === 200) {
+  if (response.status >= 200 && response.status < 300) {
     return response.data;
   }
 }, (error: AxiosError) => {

@@ -1,7 +1,7 @@
 <template>
   <div class="index">
     <div class="category-list flex flex-wrap py-10 bg-fff" :style="{ transform: `translateY(${scrollTop}px)` }">
-      <nuxt-link class="ml-10" to="" v-for="(item, idx) in list" :key="idx">
+      <nuxt-link class="ml-10" :to="`/?tag=${item.id}`" v-for="(item, idx) in list" :key="idx">
         <b-tag :title="item.title" class="item fs-13 hover-underline"></b-tag>
       </nuxt-link>
     </div>
@@ -87,7 +87,7 @@ export default Vue.extend({
       articles: [],
       articles2: [],
       scrollTop: 0,
-      status: 0
+      status: 0,
     }
   },
   async asyncData({ query }) {
