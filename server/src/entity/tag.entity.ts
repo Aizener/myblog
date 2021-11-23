@@ -24,6 +24,14 @@ class Tag {
     comment: '创建时间',
   })
   createTime = '';
+
+  @Column({
+    type: 'varchar',
+    length: 20,
+    nullable: true,
+    comment: '修改时间',
+  })
+  updateTime = '';
 }
 
 export default Tag;

@@ -49,6 +49,14 @@ class User {
   })
   createTime = '';
 
+  @Column({
+    type: 'varchar',
+    length: 20,
+    nullable: true,
+    comment: '修改时间',
+  })
+  updateTime = '';
+
   @OneToMany(() => Article, (article) => article.user)
   articles!: Article[];
 }

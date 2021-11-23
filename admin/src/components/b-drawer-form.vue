@@ -123,7 +123,6 @@ export default defineComponent({
 
     const { proxy }: any = getCurrentInstance();
     const qiniuData = ref();
-    const previewImage = ref();
     const mdHTML = ref();
 
     // 自定义一份表单model数据
@@ -135,13 +134,12 @@ export default defineComponent({
           model.value[key + '_files'] = [{ url: qiniuPreview + model.value[key] }]
         }
       }
-      console.log(model.value)
     }, { deep: true })
 
     // 点击确定按钮
     const handleAdd = () => {
       formRef.value.validate((isValid: boolean) => {
-        model.value.content = mdHTML.value;
+        model.value.htmlContent = mdHTML.value;
         if (isValid) {
           emit('confirm', model.value)
         }

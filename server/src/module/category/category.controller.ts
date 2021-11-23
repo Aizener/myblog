@@ -34,8 +34,8 @@ export class CategoryController {
   }
 
   @Post('/save')
-  async addArticle(@CategoryParam() diary, @Res() res) {
-    const ret = await this.categoryService.save(diary);
+  async addArticle(@CategoryParam() category, @Res() res) {
+    const ret = await this.categoryService.save(category);
     res.json({
       code: HttpStatus.OK,
       data: ret,
@@ -44,8 +44,13 @@ export class CategoryController {
   }
 
   @Put('/save')
-  async updateArticle(@CategoryParam() diary, @Res() res) {
-    const ret = await this.categoryService.save(diary);
+  async updateArticle(@CategoryParam() category, @Res() res) {
+    const _category = await this.categoryService.findOne(category.id);
+    if (_category) {
+      throw new HttpException('修改的分类已不存在', HttpStatus.OK);
+    }
+    category.createTime = _category.createTime;
+    const ret = await this.categoryService.save(category);
     res.json({
       code: HttpStatus.OK,
       data: ret,

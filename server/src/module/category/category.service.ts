@@ -46,6 +46,10 @@ export class CategoryService {
     return res;
   }
 
+  async findOne(id: number) {
+    return await this.categoryRepository.findOne(id);
+  }
+
   async save(category: Category) {
     return await this.categoryRepository.save(category);
   }

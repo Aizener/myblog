@@ -37,6 +37,10 @@ export class DiaryService {
     return await this.diaryRepository.count();
   }
 
+  async findOne(id: number) {
+    return await this.diaryRepository.findOne(id);
+  }
+
   async save(diary: Diary) {
     return await this.diaryRepository.save(diary);
   }

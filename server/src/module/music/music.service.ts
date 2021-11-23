@@ -33,6 +33,10 @@ export class MusicService {
     return [res, total];
   }
 
+  async findOne(id: number) {
+    return await this.musicRepository.findOne(id);
+  }
+
   async save(music: Music) {
     return await this.musicRepository.save(music);
   }

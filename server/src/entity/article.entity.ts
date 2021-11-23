@@ -45,6 +45,12 @@ class Article {
   content = '';
 
   @Column({
+    type: 'text',
+    comment: '内容（html）'
+  })
+  htmlContent = '';
+
+  @Column({
     type: 'int',
     nullable: true,
     comment: '浏览数量',

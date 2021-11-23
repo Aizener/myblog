@@ -1,5 +1,5 @@
 import { getCurrentInstance, ref, reactive } from 'vue';
-import { addArticle, editArticle, removeArticle, removeArticleMulti } from '@/utils/api/article';
+import { addArticle, editArticle, getArticle, removeArticle, removeArticleMulti } from '@/utils/api/article';
     
 const useForm = (initData: Function) => {
   const formState = reactive<{
@@ -29,7 +29,13 @@ const useForm = (initData: Function) => {
 
   const { proxy }: any = getCurrentInstance();
 
-  const handleEdit = (row: any) => {
+  const handleEdit = async (row: any) => {
+    const id = row.id;
+    const res: any = await getArticle(id);
+    if (res.code !== 200) {
+      return;
+    }
+    row.content = res.data.content;
     for (const key in row) {
       if (formState.articleForm[key]) {
         formState.articleForm[key].value = row[key];

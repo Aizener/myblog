@@ -46,6 +46,10 @@ export class TagService {
     return res;
   }
 
+  async findOne(id: number) {
+    return await this.tagRepository.findOne(id);
+  }
+
   async save(tag: Tag) {
     return await this.tagRepository.save(tag);
   }

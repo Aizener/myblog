@@ -1,5 +1,9 @@
 import request from '../request'
 
+export const getArticle = (id: number) => {
+  return request.get(`/article/${id}`)
+}
+
 export const getArticleList = (params: any) => {
   return request.get('/article/list', { params });
 }

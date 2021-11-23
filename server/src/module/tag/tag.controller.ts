@@ -33,8 +33,8 @@ export class TagController {
   }
 
   @Post('/save')
-  async addArticle(@TagParam() diary, @Res() res) {
-    const ret = await this.tagService.save(diary);
+  async addArticle(@TagParam() tag, @Res() res) {
+    const ret = await this.tagService.save(tag);
     res.json({
       code: HttpStatus.OK,
       data: ret,
@@ -43,8 +43,13 @@ export class TagController {
   }
 
   @Put('/save')
-  async updateArticle(@TagParam() diary, @Res() res) {
-    const ret = await this.tagService.save(diary);
+  async updateArticle(@TagParam() tag, @Res() res) {
+    const _tag = await this.tagService.findOne(tag.id);
+    if (_tag) {
+      throw new HttpException('修改的分类已不存在', HttpStatus.OK);
+    }
+    tag.createTime = _tag.createTime;
+    const ret = await this.tagService.save(tag);
     res.json({
       code: HttpStatus.OK,
       data: ret,

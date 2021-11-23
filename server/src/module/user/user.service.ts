@@ -33,6 +33,10 @@ export class UserService {
     return [res, total];
   }
 
+  async findOne(id: number) {
+    return await this.userRepository.findOne(id);
+  }
+
   async save(user: User) {
     return await this.userRepository.save(user);
   }

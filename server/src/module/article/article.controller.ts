@@ -56,6 +56,15 @@ export class ArticleController {
 
   @Put('/save')
   async updateArticle(@ArticleParam() article, @Res() res) {
+    const _article = await this.articleService.findOne(article.id);
+    if (!_article) {
+      res.json({
+        code: HttpStatus.NOT_FOUND,
+        msg: '文章已经不存在'
+      })
+      return;
+    }
+    article.createTime = _article.createTime;
     const ret = await this.articleService.save(article);
     res.json({
       code: HttpStatus.OK,

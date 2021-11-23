@@ -29,6 +29,11 @@ export class DiaryController {
 
   @Put('/save')
   async updateArticle(@DiaryParam() diary, @Res() res) {
+    const _diary= await this.diaryService.findOne(diary.id);
+    if (_diary) {
+      throw new HttpException('修改的分类已不存在', HttpStatus.OK);
+    }
+    diary.createTime = _diary.createTime;
     const ret = await this.diaryService.save(diary);
     res.json({
       code: HttpStatus.OK,

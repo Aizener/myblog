@@ -28,11 +28,25 @@ class Diary {
   content = '';
 
   @Column({
+    type: 'text',
+    comment: '内容（html）'
+  })
+  htmlContent = '';
+
+  @Column({
     type: 'varchar',
     length: 20,
     comment: '创建时间',
   })
   createTime = '';
+
+  @Column({
+    type: 'varchar',
+    length: 20,
+    nullable: true,
+    comment: '修改时间',
+  })
+  updateTime = '';
 }
 
 export default Diary;

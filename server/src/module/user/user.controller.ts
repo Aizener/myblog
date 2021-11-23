@@ -18,8 +18,8 @@ export class UserController {
   }
 
   @Post('/save')
-  async addArticle(@UserParam() diary, @Res() res) {
-    const ret = await this.userService.save(diary);
+  async addArticle(@UserParam() user, @Res() res) {
+    const ret = await this.userService.save(user);
     res.json({
       code: HttpStatus.OK,
       data: ret,
@@ -28,8 +28,13 @@ export class UserController {
   }
 
   @Put('/save')
-  async updateArticle(@UserParam() diary, @Res() res) {
-    const ret = await this.userService.save(diary);
+  async updateArticle(@UserParam() user, @Res() res) {
+    const _user = await this.userService.findOne(user.id);
+    if (_user) {
+      throw new HttpException('修改的分类已不存在', HttpStatus.OK);
+    }
+    user.createTime = _user.createTime;
+    const ret = await this.userService.save(user);
     res.json({
       code: HttpStatus.OK,
       data: ret,

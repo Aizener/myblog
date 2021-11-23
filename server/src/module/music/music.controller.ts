@@ -18,8 +18,8 @@ export class MusicController {
   }
 
   @Post('/save')
-  async addArticle(@MusicParam() diary, @Res() res) {
-    const ret = await this.musicService.save(diary);
+  async addArticle(@MusicParam() music, @Res() res) {
+    const ret = await this.musicService.save(music);
     res.json({
       code: HttpStatus.OK,
       data: ret,
@@ -28,8 +28,13 @@ export class MusicController {
   }
 
   @Put('/save')
-  async updateArticle(@MusicParam() diary, @Res() res) {
-    const ret = await this.musicService.save(diary);
+  async updateArticle(@MusicParam() music, @Res() res) {
+    const _music = await this.musicService.findOne(music.id);
+    if (_music) {
+      throw new HttpException('修改的分类已不存在', HttpStatus.OK);
+    }
+    music.createTime = _music.createTime;
+    const ret = await this.musicService.save(music);
     res.json({
       code: HttpStatus.OK,
       data: ret,
